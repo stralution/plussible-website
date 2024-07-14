@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Advert</title>
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="stylesheet" href="styles/sign-in.css">
+    <link rel="stylesheet" href="styles/create-ad.css">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <nav>
+            <div class="menu">Menu ▼</div>
+            <div class="menu-items">
+                <a href="#">Settings</a>
+                <a href="#">Chat Support</a>
+                <a href="#" id="logout-link">Log Out</a>
+            </div>
+        </nav>
+    </header>
+    <div class="header-bar">
+        <button class="back-button" onclick="window.location.href='business-account.html'">← Back</button>
+    </div>
+    <div class="container">
+        <div class="form-container">
+            <div class="sub-heading">Create New Advert</div>
+            <div class="sub-text">Create What Customers Love</div>
+            <div class="form-group">
+                <label for="category">Business/Service Category <span>*</span></label>
+                <input type="text" id="category" name="category" placeholder="e.g., Plumbing, Accounting" required autocomplete="organization-title">
+                <div class="error-message" id="category-error">Please complete this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="image">Upload Image <span>*</span></label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <img id="preview" style="display:none;" alt="Image Preview">
+                <div class="error-message" id="image-error">Please complete this field.</div>
+            </div>
+            <div class="form-group name-group" style="display: block;">
+                <label for="name">Service Name <span>*</span></label>
+                <input type="text" id="name" name="name" placeholder="e.g., Deluxe Shower Installation" required autocomplete="organization-title">
+                <div class="error-message" id="name-error">Please complete this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="address">Street Number and Name <span>*</span></label>
+                <input type="text" id="address" name="address" placeholder="e.g., 123 Main St, Springfield, IL" required autocomplete="street-address">
+                <div class="error-message" id="address-error">Please complete this field.</div>
+            </div>
+            <div class="address-group">
+                <div class="form-group">
+                    <label for="suite">Suite/Apartment No</label>
+                    <input type="text" id="suite" name="suite" placeholder="e.g., Apt 101" autocomplete="address-line2">
+                </div>
+                <div class="form-group">
+                    <label for="city">City <span>*</span></label>
+                    <input type="text" id="city" name="city" placeholder="e.g., Springfield" required autocomplete="address-level2">
+                    <div class="error-message" id="city-error">Please complete this field.</div>
+                </div>
+            </div>
+            <div class="address-group">
+                <div class="form-group">
+                    <label for="state">State <span>*</span></label>
+                    <input type="text" id="state" name="state" placeholder="e.g., IL" required autocomplete="address-level1">
+                    <div class="error-message" id="state-error">Please complete this field.</div>
+                </div>
+                <div class="form-group">
+                    <label for="zip">Zip Code <span>*</span></label>
+                    <input type="text" id="zip" name="zip" placeholder="e.g., 62701" required autocomplete="postal-code">
+                    <div class="error-message" id="zip-error">Please complete this field.</div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="locations-input">Locations Served <span>*</span></label>
+                <input type="text" id="locations-input" placeholder="Enter locations, press Enter after each (e.g., New York, Los Angeles)" autocomplete="off">
+                <div id="locations-container" class="locations-container"></div>
+                <div class="error-message" id="locations-error">Please complete this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile No <span>*</span></label>
+                <input type="tel" id="mobile" name="mobile" placeholder="e.g., 555-123-4567" required autocomplete="tel">
+                <div class="error-message" id="mobile-error">Please complete this field.</div>
+            </div>
+            <div class="form-group service-only" style="display: block;">
+                <label for="duration">Service Duration <span>*</span></label>
+                <div class="time-range">
+                    <input type="number" id="duration" name="duration" placeholder="Enter duration" autocomplete="off">
+                    <div class="time-unit">
+                        <select id="duration-unit" name="duration-unit" style="width: auto;" autocomplete="off">
+                            <option value="">Select</option>
+                            <option value="seconds">Second(s)</option>
+                            <option value="minutes">Minute(s)</option>
+                            <option value="hours">Hour(s)</option>
+                            <option value="days">Day(s)</option>
+                            <option value="months">Month(s)</option>
+                            <option value="years">Year(s)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="error-message" id="duration-error">Please complete this field.</div>
+            </div>
+            <div class="form-group price-group" style="display: block;">
+                <p class="price-info" id="price-info">
+                    "Fixed Price" means that customers will be charged the exact amount listed in your advert. "Quotation" allows you to understand the customer's needs better and provide a quote. This is preferable for more complex services that cannot be given a fixed price. If you select "Quotation", your advert will display service price as your starting price. 
+                </p>
+                <label for="price" id="price-label">Service Price ($) <span>*</span></label>
+                <div class="price-wrapper">
+                    <input type="number" id="price" name="price" placeholder="e.g., 100" required autocomplete="off">
+                    <div class="error-message" id="price-error">Please complete this field.</div>
+                </div>
+                <label for="price-type" id="price-type-label" style="margin-top: 20px;">Price Type <span>*</span></label>
+                <select class="select-price-selector" id="price-type" name="price-type" required autocomplete="off">
+                    <option value="">Select</option>
+                    <option value="fixed">Fixed Price</option>
+                    <option value="quotation">Quotation</option>
+                </select>
+                <div class="error-message" id="price-type-error">Please complete this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="specials">Special Offers</label>
+                <input type="text" id="specials" name="specials" placeholder="e.g., $30 gift card for June customers" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="extras">Extras/Complimentary Offers</label>
+                <input type="text" id="extras" name="extras" placeholder="e.g., Free facials" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="tags-input">Tags <span>*</span></label>
+                <input type="text" id="tags-input" placeholder="Enter tags, press Enter after each (e.g., reliable, affordable)" autocomplete="off">
+                <div id="tags-container" class="tags-container"></div>
+                <div class="error-message" id="tags-error">Please complete this field.</div>
+            </div>
+            <div class="form-group">
+                <label for="terms">Terms and Conditions</label>
+                <textarea id="terms" name="terms" rows="4" placeholder="Enter terms and conditions"></textarea>
+            </div>
+            <div class="form-group">
+                <p><span>*</span> Indicates required fields</p>
+            </div>
+            <div class="form-group">
+                <button type="button" id="create-advert-button">Create Advert Now</button>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+    <button id="log-storage-button" style="margin: 20px; padding: 10px; font-size: 16px;">Log Storage Items</button>
+    <script src="scripts/business/create-ad.js"></script>
+</body>
+</html>
+

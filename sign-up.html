@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plussible - Sign Up</title>
+    <!-- Multiple favicon sizes for better visibility -->
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <link rel="stylesheet" href="styles/sign-up.css">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+    <style>
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function togglePasswordVisibility(id) {
+            var passwordInput = document.getElementById(id);
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
+
+        function saveUserData(user) {
+            let users = JSON.parse(localStorage.getItem('endUsers')) || [];
+            users.push(user);
+            localStorage.setItem('endUsers', JSON.stringify(users));
+            console.log(users);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".header-logo").addEventListener("click", function() {
+                window.location.href = "plussible.html";
+            });
+
+            document.querySelector('input[value="custom"]').addEventListener('change', function () {
+                document.getElementById('custom-gender').style.display = 'block';
+            });
+            document.querySelector('input[value="male"]').addEventListener('change', function () {
+                document.getElementById('custom-gender').style.display = 'none';
+            });
+            document.querySelector('input[value="female"]').addEventListener('change', function () {
+                document.getElementById('custom-gender').style.display = 'none';
+            });
+
+            document.getElementById('sign-up-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var firstName = document.querySelector('input[placeholder="First Name *"]').value;
+                var lastName = document.querySelector('input[placeholder="Last Name *"]').value;
+                var email = document.querySelector('input[type="email"]').value;
+                var phoneCountryCode = document.querySelector('.phone-group select').value;
+                var mobileNumber = document.querySelector('.phone-group input[type="tel"]').value;
+                var newPassword = document.getElementById('new-password').value;
+                var reenterPassword = document.getElementById('reenter-password').value;
+                var dateOfBirth = document.querySelector('input[type="date"]').value;
+                var gender = document.querySelector('input[name="gender"]:checked').value;
+                var customGender = document.getElementById('custom-gender').value;
+
+                var emailError = document.getElementById('email-error');
+                var newPasswordError = document.getElementById('new-password-error');
+                var reenterPasswordError = document.getElementById('reenter-password-error');
+
+                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                var valid = true;
+
+                if (!emailPattern.test(email)) {
+                    emailError.textContent = "Please enter a valid email address.";
+                    document.querySelector('input[type="email"]').classList.add("error-border");
+                    valid = false;
+                } else {
+                    emailError.textContent = "";
+                    document.querySelector('input[type="email"]').classList.remove("error-border");
+                }
+
+                if (newPassword.length < 6) {
+                    newPasswordError.textContent = "New Password must be at least 6 characters long.";
+                    document.getElementById('new-password').classList.add("error-border");
+                    valid = false;
+                } else {
+                    newPasswordError.textContent = "";
+                    document.getElementById('new-password').classList.remove("error-border");
+                }
+
+                if (newPassword !== reenterPassword) {
+                    reenterPasswordError.textContent = "New Password and Re-enter Password must match.";
+                    document.getElementById('reenter-password').classList.add("error-border");
+                    valid = false;
+                } else {
+                    reenterPasswordError.textContent = "";
+                    document.getElementById('reenter-password').classList.remove("error-border");
+                }
+
+                if (valid) {
+                    var user = {
+                        id: Date.now(),
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        phoneCountryCode: phoneCountryCode,
+                        mobileNumber: mobileNumber,
+                        password: newPassword,
+                        dateOfBirth: dateOfBirth,
+                        gender: gender,
+                        customGender: gender === "custom" ? customGender : ""
+                    };
+                    saveUserData(user);
+                    alert("User data saved successfully!");
+                    window.location.href = "sign-in.html";
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <a href="sign-in.html" class="header-button">Sign In</a>
+    </header>
+    <div class="container">
+        <div class="sign-up-box">
+            <h2>Create New Account</h2>
+            <p class="subheading">It's fast and simple.</p>
+            <form id="sign-up-form">
+                <input type="text" placeholder="First Name *" required>
+                <input type="text" placeholder="Last Name *" required>
+                <input type="email" placeholder="Email *" required>
+                <div id="email-error" class="error"></div>
+                <div class="phone-group">
+                    <select required>
+                        <option value="us" selected>+1</option>
+                        <!-- Add more country codes as needed -->
+                    </select>
+                    <input type="tel" placeholder="Mobile Number *" required>
+                </div>
+                <input type="password" id="new-password" placeholder="New Password *" required>
+                <div id="new-password-error" class="error"></div>
+                <input type="password" id="reenter-password" placeholder="Re-enter Password *" required>
+                <div id="reenter-password-error" class="error"></div>
+                <label>Date of Birth</label>
+                <input type="date" placeholder="Birthday *" required>
+                <div class="gender-group">
+                    <label>Gender:</label>
+                    <label><input type="radio" name="gender" value="male"> Male</label>
+                    <label><input type="radio" name="gender" value="female"> Female</label>
+                    <label><input type="radio" name="gender" value="custom"> Custom</label>
+                    <select id="custom-gender" style="display: none;">
+                        <option value="she">She</option>
+                        <option value="him">Him</option>
+                        <option value="them">Them</option>
+                    </select>
+                </div>
+                <p class="terms">By clicking Sign Up, you agree to our <a href="#">Terms</a>, <a href="#">Privacy Policy</a>, and <a href="#">Cookies Policy</a>. You may receive SMS notifications from us and can opt out at any time.</p>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+</body>
+</html>

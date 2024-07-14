@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Calendar</title>
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <link rel="stylesheet" href="styles/manage-calendar.css">
+    <script src="scripts/business/manage-calendar.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <nav>
+            <div class="menu">Menu ▼</div>
+            <div class="menu-items">
+                <a href="#">Settings</a>
+                <a href="#">Chat Support</a>
+                <a href="#" id="logout-link">Log Out</a>
+            </div>
+        </nav>
+    </header>
+    <div class="header-bar">
+        <button class="back-button" onclick="window.location.href='business-account.html'">← Back</button>
+    </div>
+    <div class="container">
+        <div class="form-container">
+            <div class="sub-heading">Manage Calendar</div>
+            <div class="form-group">
+                <label for="service-name">Service Name</label>
+                <select id="service-name" class="selector">
+                    <option value="">Select Service Name</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select Work Days</label>
+                <div id="work-days" class="work-days">
+                    <div><input type="checkbox" id="monday" name="work-day" value="monday"><label for="monday">Monday</label></div>
+                    <div><input type="checkbox" id="tuesday" name="work-day" value="tuesday"><label for="tuesday">Tuesday</label></div>
+                    <div><input type="checkbox" id="wednesday" name="work-day" value="wednesday"><label for="wednesday">Wednesday</label></div>
+                    <div><input type="checkbox" id="thursday" name="work-day" value="thursday"><label for="thursday">Thursday</label></div>
+                    <div><input type="checkbox" id="friday" name="work-day" value="friday"><label for="friday">Friday</label></div>
+                    <div><input type="checkbox" id="saturday" name="work-day" value="saturday"><label for="saturday">Saturday</label></div>
+                    <div><input type="checkbox" id="sunday" name="work-day" value="sunday"><label for="sunday">Sunday</label></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Select Work Hours</label>
+                <div class="time-range">
+                    <input type="time" id="work-hours-start" name="work-hours-start" value="09:00">
+                    <span>to</span>
+                    <input type="time" id="work-hours-end" name="work-hours-end" value="17:00">
+                </div>
+            </div>
+            <div class="form-group warning-message">
+                <p style="color: red; font-weight: bold;">Please add an employee or machinery to proceed if you haven't already done so. <a href="manage-team.html" style="color: blue;">Manage Team</a></p>
+            </div>
+            <div class="form-group">
+                <label>Task Performed By:</label>
+                <div class="task-performed-by">
+                    <div>
+                        <input type="radio" id="employee" name="performed-by" value="employee">
+                        <label for="employee">Employee</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="machinery" name="performed-by" value="machinery">
+                        <label for="machinery">Machinery</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" id="employee-select-group" style="display: none;">
+                <label for="employee-select">Select Employee</label>
+                <select class="selector" id="employee-select">
+                    <option value="">Select Employee</option>
+                </select>
+            </div>
+            <div class="form-group" id="machinery-select-group" style="display: none;">
+                <label for="machinery-select">Select Machinery</label>
+                <select class="selector" id="machinery-select">
+                    <option value="">Select Machinery</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button type="button" id="save-work-hours">Save Work Hours</button>
+            </div>
+            <div class="form-group button-group">
+                <button type="button" id="preview-calendar">Preview Calendar</button>
+            </div>
+        </div>
+    </div>
+    <div id="manpower-popup" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="close-manpower-popup">&times;</span>
+            <div class="sub-heading">Confirm Manpower Availability</div>
+            <p>You are trying to book a date that has already been booked. Please confirm you have enough manpower available for this booking.</p>
+            <button type="button" id="confirm-manpower">Confirm</button>
+        </div>
+    </div>
+    <!-- Modal for previewing calendar -->
+    <div id="preview-calendar-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" id="close-preview-calendar">&times;</span>
+            <h2>Work Hours Calendar</h2>
+            <div class="calendar-container">
+                <div id="view-calendar" class="calendar"></div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".header-logo").addEventListener("click", function() {
+                window.location.href = "plussible.html";
+            });
+
+            const menu = document.querySelector('.menu');
+            const menuItems = document.querySelector('.menu-items');
+            const logoutLink = document.getElementById('logout-link');
+
+            menu.addEventListener('click', function(event) {
+                menuItems.style.display = menuItems.style.display === 'none' ? 'block' : 'none';
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!menu.contains(event.target)) {
+                    menuItems.style.display = 'none';
+                }
+            });
+
+            // Log out functionality
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                localStorage.removeItem('currentUser');
+                window.location.href = 'business-sign-in.html';
+            });
+        });
+    </script>
+    <script src="scripts/footer/footer.js"></script>
+</body>
+</html>

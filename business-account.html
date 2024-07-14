@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plussible - Business Account</title>
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <link rel="stylesheet" href="styles/sign-in.css">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header-logo img {
+            height: 50px;
+            cursor: pointer;
+        }
+
+        .header-business-name {
+            font-size: 30px;
+            color: #0092FF;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        nav {
+            position: relative;
+        }
+
+        nav a {
+            color: #0092FF;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #0056b3;
+        }
+
+        nav .menu {
+            display: flex;
+            gap: 20px;
+            cursor: pointer;
+            color: #0092FF;
+        }
+
+        nav .menu-items {
+            margin-top: -15px;
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        nav .menu-items a {
+            display: block;
+            padding: 10px 20px;
+            color: #0092FF;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        nav .menu-items a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .sub-heading {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .search-box {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .search-box input[type="text"] {
+            padding: 10px;
+            font-size: 18px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            box-sizing: border-box;
+        }
+
+        .search-box button {
+            padding: 0;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            height: 42px;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+
+        .search-box button a {
+            display: inline-block;
+            width: 100%;
+            height: 65%;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+            background-color: #0092FF;
+            padding: 8px;
+            border-radius: 0 5px 5px 0;
+            text-decoration: none;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .tab {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            height: 200px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #0092FF;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-decoration: none;
+            color: white; /* Ensure text remains white */
+        }
+
+        .tab:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            background-color: #0056b3;
+        }
+
+        .tab div {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            color: white; /* Ensure text remains white */
+        }
+
+        @media (max-width: 600px) {
+            .search-box {
+                flex-direction: row;
+                align-items: center;
+                width: 100%;
+            }
+            .search-box input[type="text"] {
+                border-radius: 5px 0 0 5px;
+            }
+            .search-box button {
+                width: auto;
+                border-radius: 0 5px 5px 0;
+            }
+            .filter-box {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-start;
+            }
+            .filter-box .filter-item {
+                margin-bottom: 10px;
+            }
+            .tab-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .tab-card .left, .tab-card .right, .tab-card .middle {
+                padding: 10px;
+                text-align: center;
+            }
+            .tab-card img {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <nav>
+            <div class="menu">Menu ▼</div>
+            <div class="menu-items">
+                <a href="#">Settings</a>
+                <a href="#">Chat Support</a>
+                <a href="#" id="logout-link">Log Out</a>
+            </div>
+        </nav>
+    </header>
+    <div class="header-business-name">Boom Air and Heat</div>
+    <div class="container">
+        <div class="sub-heading">Welcome, Tom Hanks</div>
+        <div class="search-box">
+            <input type="text" placeholder="Find great offers from service providers near you">
+            <button>
+                <a href="#">🔍</a>
+            </button>
+        </div>
+        <div class="tabs">
+            <a href="view-advert.html" class="tab">
+                <div>View Your Ads</div>
+            </a>
+            <a href="create-ad.html" class="tab">
+                <div>Create New Ad</div>
+            </a>
+            <a href="#" class="tab">
+                <div>View Orders</div>
+            </a>
+            <a href="#" class=" tab">
+                <div>Past Orders</div>
+            </a>
+            <a href="manage-calendar.html" class="tab">
+                <div>Manage Calendar</div>
+            </a>
+            <a href="manage-team.html" class="tab">
+                <div>Manage Team</div>
+            </a>
+            <a href="update-calendar.html" class="tab">
+                <div>Update Calendar</div>
+            </a>
+            <a href="create-business-page.html" class="tab">
+                <div>Create/Edit Business Page</div>
+            </a>
+            <a href="#" class="tab">
+                <div>Revenue</div>
+            </a>
+            <a href="business-page.html" class="tab">
+                <div>View Business Page</div>
+            </a>
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".header-logo").addEventListener("click", function() {
+                window.location.href = "plussible.html";
+            });
+
+            const menu = document.querySelector('.menu');
+            const menuItems = document.querySelector('.menu-items');
+            const logoutLink = document.getElementById('logout-link');
+
+            menu.addEventListener('click', function(event) {
+                menuItems.style.display = menuItems.style.display === 'none' ? 'block' : 'none';
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!menu.contains(event.target)) {
+                    menuItems.style.display = 'none';
+                }
+            });
+
+            // Update business name and check login status
+            const storedUserData = localStorage.getItem('currentUser');
+            if (storedUserData) {
+                const userData = JSON.parse(storedUserData);
+                document.querySelector('.header-business-name').textContent = userData.businessName || 'Your Business Name';
+                document.querySelector('.sub-heading').textContent = `Welcome, ${userData.firstName} ${userData.lastName}`;
+            } else {
+                // Redirect to login page if not logged in
+                window.location.href = 'business-sign-in.html';
+            }
+
+            // Log out functionality
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                localStorage.removeItem('currentUser');
+                window.location.href = 'business-sign-in.html';
+            });
+
+            // Search functionality
+            const searchInput = document.querySelector('.search-box input[type="text"]');
+            const quickSearchButton = document.querySelector('.search-box button a');
+            const errorMessage = document.createElement('div');
+            errorMessage.classList.add('error-message');
+            document.querySelector('.container').appendChild(errorMessage);
+
+            function searchAdverts(query) {
+                const allAdvertsKeys = Object.keys(localStorage).filter(key => key.startsWith('user_') && key.endsWith('_serviceAdverts'));
+                let allAdverts = [];
+                allAdvertsKeys.forEach(key => {
+                    const adverts = JSON.parse(localStorage.getItem(key)) || [];
+                    allAdverts = allAdverts.concat(adverts);
+                });
+                return allAdverts.filter(offer => {
+                    return Object.values(offer).some(value => 
+                        (typeof value === 'string' || Array.isArray(value)) && 
+                        value.toString().toLowerCase().includes(query)
+                    );
+                });
+            }
+
+            searchInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    quickSearchButton.click();
+                }
+            });
+
+            quickSearchButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                const query = searchInput.value.toLowerCase().trim();
+                const results = searchAdverts(query);
+
+                if (results.length === 0) {
+                    errorMessage.textContent = 'No adverts found for the entered search term.';
+                } else {
+                    errorMessage.textContent = '';
+                    localStorage.setItem('searchResults', JSON.stringify(results));
+                    localStorage.setItem('searchQuery', query); // Save the search query
+                    window.location.href = "search-page.html"; // Redirect to search results page
+                }
+            });
+        });
+    </script>
+</body>
+</html>
