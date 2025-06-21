@@ -1,45 +1,46 @@
-function getLocation() {
+document.addEventListener("DOMContentLoaded", function () {
+  const locationDisplay = document.getElementById("location-info");
+
+  if (!locationDisplay) return;
+
   if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition, showError);
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
+          .then(response => response.json())
+          .then(data => {
+            const address = data.address;
+            const city = address.city || address.town || address.village || '';
+            const postcode = address.postcode || '';
+            const country = address.country || '';
+            locationDisplay.innerHTML = `Location: ${city ? city + ', ' : ''}${country}${postcode ? ', ZIP Code: ' + postcode : ''}`;
+          })
+          .catch(() => {
+            locationDisplay.innerHTML = "Error retrieving location.";
+          });
+      },
+      function (error) {
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            locationDisplay.innerHTML = "User denied the request for Geolocation.";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            locationDisplay.innerHTML = "Location information is unavailable.";
+            break;
+          case error.TIMEOUT:
+            locationDisplay.innerHTML = "The request to get user location timed out.";
+            break;
+          default:
+            locationDisplay.innerHTML = "An unknown error occurred.";
+            break;
+        }
+      },
+      { timeout: 10000 }
+    );
   } else {
-      document.getElementById("location-info").innerHTML = "Geolocation is not supported by this browser.";
+    locationDisplay.innerHTML = "Geolocation is not supported by this browser.";
   }
-}
-
-function showPosition(position) {
-  const lat = position.coords.latitude;
-  const lon = position.coords.longitude;
-  fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=YOUR_API_KEY`)
-      .then(response => response.json())
-      .then(data => {
-          if (data.status === "OK") {
-              const address = data.results[0].formatted_address;
-              const postalCode = data.results[0].address_components.find(component => component.types.includes("postal_code")).long_name;
-              document.getElementById("location-info").innerHTML = `Location: ${address}, ZIP Code: ${postalCode}`;
-          } else {
-              document.getElementById("location-info").innerHTML = "Unable to retrieve location.";
-          }
-      })
-      .catch(error => {
-          document.getElementById("location-info").innerHTML = "Error retrieving location.";
-      });
-}
-
-function showError(error) {
-  switch(error.code) {
-      case error.PERMISSION_DENIED:
-          document.getElementById("location-info").innerHTML = "User denied the request for Geolocation.";
-          break;
-      case error.POSITION_UNAVAILABLE:
-          document.getElementById("location-info").innerHTML = "Location information is unavailable.";
-          break;
-      case error.TIMEOUT:
-          document.getElementById("location-info").innerHTML = "The request to get user location timed out.";
-          break;
-      case error.UNKNOWN_ERROR:
-          document.getElementById("location-info").innerHTML = "An unknown error occurred.";
-          break;
-  }
-}
-
-document.addEventListener("DOMContentLoaded", getLocation);
+});
