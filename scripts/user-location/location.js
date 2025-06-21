@@ -1,46 +1,70 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const locationDisplay = document.getElementById("location-info");
+  const locationInfo = document.getElementById("location-info");
 
-  if (!locationDisplay) return;
+  if (!locationInfo) {
+    console.error("❌ location-info element not found in HTML.");
+    return;
+  }
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
+  locationInfo.textContent = "Detecting location...";
 
-        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
-          .then(response => response.json())
-          .then(data => {
-            const address = data.address;
-            const city = address.city || address.town || address.village || '';
-            const postcode = address.postcode || '';
-            const country = address.country || '';
-            locationDisplay.innerHTML = `Location: ${city ? city + ', ' : ''}${country}${postcode ? ', ZIP Code: ' + postcode : ''}`;
-          })
-          .catch(() => {
-            locationDisplay.innerHTML = "Error retrieving location.";
-          });
-      },
-      function (error) {
-        switch (error.code) {
-          case error.PERMISSION_DENIED:
-            locationDisplay.innerHTML = "User denied the request for Geolocation.";
-            break;
-          case error.POSITION_UNAVAILABLE:
-            locationDisplay.innerHTML = "Location information is unavailable.";
-            break;
-          case error.TIMEOUT:
-            locationDisplay.innerHTML = "The request to get user location timed out.";
-            break;
-          default:
-            locationDisplay.innerHTML = "An unknown error occurred.";
-            break;
+  if (!navigator.geolocation) {
+    locationInfo.textContent = "Geolocation is not supported by this browser.";
+    console.error("❌ Geolocation not supported.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+
+  function successCallback(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    console.log("📍 Got coordinates:", lat, lon);
+
+    const apiKey = "YOUR_API_KEY"; // Replace this with your actual Google Maps API key
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}`;
+
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) throw new Error("🌐 Network response was not ok.");
+        return response.json();
+      })
+      .then((data) => {
+        if (data.status !== "OK") {
+          locationInfo.textContent = "Unable to retrieve location details.";
+          console.error("⚠️ Google Maps error:", data.status, data.error_message);
+          return;
         }
-      },
-      { timeout: 10000 }
-    );
-  } else {
-    locationDisplay.innerHTML = "Geolocation is not supported by this browser.";
+
+        const address = data.results[0].formatted_address;
+        const postalComponent = data.results[0].address_components.find((c) =>
+          c.types.includes("postal_code")
+        );
+        const postalCode = postalComponent ? postalComponent.long_name : "N/A";
+
+        locationInfo.textContent = `Location: ${address}, ZIP Code: ${postalCode}`;
+        console.log("✅ Address found:", address);
+      })
+      .catch((error) => {
+        locationInfo.textContent = "Error retrieving location details.";
+        console.error("❌ Fetch error:", error);
+      });
+  }
+
+  function errorCallback(error) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        locationInfo.textContent = "Location access denied. Please enable it in your browser settings.";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        locationInfo.textContent = "Location info is unavailable.";
+        break;
+      case error.TIMEOUT:
+        locationInfo.textContent = "The request for location timed out.";
+        break;
+      default:
+        locationInfo.textContent = "An unknown error occurred while detecting location.";
+    }
+    console.error("⚠️ Geolocation error:", error.message);
   }
 });
