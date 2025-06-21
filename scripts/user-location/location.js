@@ -1,47 +1,45 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const locationInfo = document.getElementById("location-info");
+document.addEventListener("DOMContentLoaded", getLocation);
 
-  if (!locationInfo) return;
-
-  locationInfo.textContent = "Detecting location...";
-
+function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(successGeo, fallbackToIP, {
-      timeout: 5000
-    });
+    navigator.geolocation.getCurrentPosition(
+      showPosition,
+      useIPFallback,
+      { timeout: 7000 }
+    );
   } else {
-    fallbackToIP(); // If geolocation isn't supported at all
+    useIPFallback();
   }
+}
 
-  function successGeo(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
+function showPosition(position) {
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
 
-    // You can use Google Maps Geocoding API here if you prefer
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`)
-      .then(res => res.json())
-      .then(data => {
-        const city = data.address.city || data.address.town || data.address.village || '';
-        const country = data.address.country || '';
-        locationInfo.textContent = `You're in ${city}, ${country}`;
-      })
-      .catch(err => {
-        console.error("Reverse geocoding failed:", err);
-        fallbackToIP(); // If geocoding fails, fallback
-      });
-  }
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+    .then(res => res.json())
+    .then(data => {
+      const address = data.display_name;
+      document.getElementById("location-info").innerHTML = `📍 ${address}`;
+    })
+    .catch(() => {
+      useIPFallback();
+    });
+}
 
-  function fallbackToIP() {
-    fetch('https://ipapi.co/json/')
-      .then(res => res.json())
-      .then(data => {
-        const city = data.city || '';
-        const country = data.country_name || '';
-        locationInfo.textContent = `You're in ${city}, ${country}`;
-      })
-      .catch(err => {
-        locationInfo.textContent = "Unable to detect location.";
-        console.error("IP-based location failed:", err);
-      });
-  }
-});
+function useIPFallback() {
+  fetch("https://ipapi.co/json/")
+    .then(res => res.json())
+    .then(data => {
+      const city = data.city;
+      const region = data.region;
+      const country = data.country_name;
+      const postal = data.postal;
+      document.getElementById("location-info").innerHTML =
+        `📍 ${city}, ${region}, ${country} ${postal}`;
+    })
+    .catch(() => {
+      document.getElementById("location-info").innerHTML =
+        "⚠️ Location could not be determined.";
+    });
+}
