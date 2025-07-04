@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plussible - Business Sign Up</title>
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <link rel="stylesheet" href="styles/business-sign-up.css">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+    <script>
+        function logStorageContents() {
+            console.log("businessUsers:", JSON.parse(localStorage.getItem('businessUsers') || '[]'));
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Log the storage contents on page load
+            logStorageContents();
+
+            document.querySelector(".header-logo").addEventListener("click", function() {
+                window.location.href = "plussible.html";
+            });
+
+            document.querySelectorAll('input[name="gender"]').forEach(function(elem) {
+                elem.addEventListener('change', function() {
+                    if (this.value === 'custom') {
+                        document.getElementById('custom-gender').style.display = 'block';
+                    } else {
+                        document.getElementById('custom-gender').style.display = 'none';
+                    }
+                });
+            });
+
+            document.getElementById('sign-up-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                var firstName = document.querySelector('input[placeholder="First Name *"]').value;
+                var lastName = document.querySelector('input[placeholder="Last Name *"]').value;
+                var address = document.querySelector('input[placeholder="Address *"]').value;
+                var apartment = document.querySelector('input[placeholder="Apartment or House No *"]').value;
+                var city = document.querySelector('input[placeholder="City *"]').value;
+                var state = document.querySelector('input[placeholder="State *"]').value;
+                var zipCode = document.querySelector('input[placeholder="ZIP Code *"]').value;
+                var email = document.querySelector('input[placeholder="Email *"]').value;
+                var mobileNumber = document.querySelector('input[placeholder="Mobile Number *"]').value;
+                var position = document.querySelector('input[placeholder="Position *"]').value;
+                var gender = document.querySelector('input[name="gender"]:checked').value;
+                var businessName = document.querySelector('input[placeholder="Business Name *"]').value;
+                var businessAddress = document.querySelector('input[placeholder="Business Address *"]').value;
+                var businessApartment = document.querySelector('input[placeholder="Apartment or Suite No *"]').value;
+                var businessCity = document.querySelector('input[placeholder="City *"]').value;
+                var businessState = document.querySelector('input[placeholder="State *"]').value;
+                var businessZipCode = document.querySelector('input[placeholder="ZIP Code *"]').value;
+                var businessPhone = document.querySelector('input[placeholder="Business Phone *"]').value;
+                var businessEmail = document.querySelector('input[placeholder="Business Email *"]').value;
+                var businessType = document.querySelector('input[placeholder="Business Type (For example, accounting, plumbing and so on)*"]').value;
+                var businessRegistrationType = document.querySelector('input[placeholder="Business Registration Type *"]').value;
+                var businessStatus = document.querySelector('input[name="business-status"]:checked').value;
+                var describeBusiness = document.querySelector('textarea[placeholder="Describe Your Business *"]').value;
+                var productOrServices = document.querySelector('textarea[placeholder="Your Product or Services *"]').value;
+                var uniqueSellingPoints = document.querySelector('textarea[placeholder="Unique Selling Points *"]').value;
+                var expectationsFromPlussible = document.querySelector('textarea[placeholder="Expectations from Plussible *"]').value;
+                var serviceLocations = document.querySelector('textarea[placeholder="Service Locations *"]').value;
+                var username = document.getElementById('username').value;
+                var newPassword = document.getElementById('new-password').value;
+                var reenterPassword = document.getElementById('reenter-password').value;
+
+                var isValid = true;
+
+                if (!validateEmail(username)) {
+                    displayError('username-error', 'Please enter a valid email address.');
+                    isValid = false;
+                } else {
+                    clearError('username-error');
+                }
+
+                if (newPassword.length < 6) {
+                    displayError('new-password-error', 'New Password must be at least 6 characters long.');
+                    isValid = false;
+                } else {
+                    clearError('new-password-error');
+                }
+
+                if (newPassword !== reenterPassword) {
+                    displayError('reenter-password-error', 'Passwords do not match.');
+                    isValid = false;
+                } else {
+                    clearError('reenter-password-error');
+                }
+
+                if (isValid) {
+                    // Retrieve existing users from local storage
+                    let users = JSON.parse(localStorage.getItem('businessUsers') || '[]');
+
+                    // Create the new user object with a unique ID
+                    const newUser = {
+                        id: Date.now(),
+                        firstName,
+                        lastName,
+                        address,
+                        apartment,
+                        city,
+                        state,
+                        zipCode,
+                        email,
+                        mobileNumber,
+                        position,
+                        gender,
+                        businessName,
+                        businessAddress,
+                        businessApartment,
+                        businessCity,
+                        businessState,
+                        businessZipCode,
+                        businessPhone,
+                        businessEmail,
+                        businessType,
+                        businessRegistrationType,
+                        businessStatus,
+                        describeBusiness,
+                        productOrServices,
+                        uniqueSellingPoints,
+                        expectationsFromPlussible,
+                        serviceLocations,
+                        username,
+                        password: newPassword
+                    };
+
+                    // Add the new user to the array
+                    users.push(newUser);
+
+                    // Save the updated array back to local storage
+                    localStorage.setItem('businessUsers', JSON.stringify(users));
+
+                    // Log the storage contents to the console
+                    logStorageContents();
+
+                    alert('Sign up successful! Your data has been saved.');
+                    // Optionally redirect to the sign-in page
+                    window.location.href = 'business-sign-in.html';
+                }
+            });
+
+            function validateEmail(email) {
+                var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(String(email).toLowerCase());
+            }
+
+            function displayError(elementId, message) {
+                var errorElement = document.getElementById(elementId);
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+
+            function clearError(elementId) {
+                var errorElement = document.getElementById(elementId);
+                errorElement.textContent = '';
+                errorElement.style.display = 'none';
+            }
+        });
+    </script>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <a href="business-sign-in.html" class="header-button">Sign In</a>
+    </header>
+    <div class="container">
+        <div class="sign-up-box">
+            <h2>Create New Business Account</h2>
+            <p class="subheading">A New World of Endless Plussibilities!</p>
+            <form id="sign-up-form">
+                <h3>About You</h3>
+                <div class="row">
+                    <input type="text" placeholder="First Name *" required>
+                    <input type="text" placeholder="Last Name *" required>
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="Address *" required class="full-width">
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="Apartment or House No *" required>
+                    <input type="text" placeholder="City *" required>
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="State *" required>
+                    <input type="text" placeholder="ZIP Code *" required>
+                </div>
+                <div class="row">
+                    <input type="email" placeholder="Email *" required>
+                    <input type="text" placeholder="Mobile Number *" required>
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="Position *" required>
+                    <div class="gender-group">
+                        <label>Gender:</label>
+                        <label><input type="radio" name="gender" value="male" required> Male</label>
+                        <label><input type="radio" name="gender" value="female" required> Female</label>
+                        <label><input type="radio" name="gender" value="custom" required> Custom</label>
+                        <select id="custom-gender" style="display: none;">
+                            <option value="she">She</option>
+                            <option value="him">Him</option>
+                            <option value="them">Them</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <h3>About Your Business</h3>
+                <div class="row">
+                    <input type="text" placeholder="Business Name *" required>
+                    <input type="text" placeholder="Business Address *" required>
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="Apartment or Suite No *" required>
+                    <input type="text" placeholder="City *" required>
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="State *" required>
+                    <input type="text" placeholder="ZIP Code *" required>
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="Business Phone *" required>
+                    <input type="email" placeholder="Business Email *" required>
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="Business Type (For example, accounting, plumbing and so on)*" required class="full-width">
+                </div>
+                <div class="row">
+                    <input type="text" placeholder="Business Registration Type *" list="business-registration" required class="full-width">
+                    <datalist id="business-registration">
+                        <option value="Sole Proprietorship (Not Registered)">
+                        <option value="Limited Liability Company (LLC)">
+                        <option value="Corporation">
+                        <option value="Partnership">
+                    </datalist>
+                </div>
+                <div class="row new-existing-group">
+                    <label>Business Status:</label>
+                    <label class="radio-label"><input type="radio" name="business-status" value="new" required> New</label>
+                    <label class="radio-label"><input type="radio" name="business-status" value="existing" required> Existing</label>
+                </div>
+                <div class="row">
+                    <textarea placeholder="Describe Your Business *" required class="full-width" maxlength="500"></textarea>
+                </div>
+                <div class="row">
+                    <textarea placeholder="Your Product or Services *" required class="full-width" maxlength="500"></textarea>
+                </div>
+                <div class="row">
+                    <textarea placeholder="Unique Selling Points *" required class="full-width" maxlength="500"></textarea>
+                </div>
+                <div class="row">
+                    <textarea placeholder="Expectations from Plussible *" required class="full-width" maxlength="500"></textarea>
+                </div>
+                <div class="row">
+                    <textarea placeholder="Service Locations *" required class="full-width" maxlength="500"></textarea>
+                </div>
+
+                <h3>Account Information</h3>
+                <div class="row">
+                    <input type="email" id="username" placeholder="Email (Username) *" required class="full-width">
+                    <div id="username-error" class="error-message"></div>
+                </div>
+                <div class="row">
+                    <input type="password" id="new-password" placeholder="New Password *" required class="full-width">
+                    <div id="new-password-error" class="error-message"></div>
+                </div>
+                <div class="row">
+                    <input type="password" id="reenter-password" placeholder="Confirm Password *" required class="full-width">
+                    <div id="reenter-password-error" class="error-message"></div>
+                </div>
+
+                <p class="terms">By clicking Sign Up, you agree to our <a href="#">Terms</a>, <a href="#">Privacy Policy</a>, and <a href="#">Cookies Policy</a>. You may receive SMS notifications from us and can opt out at any time.</p>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+</body>
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Boom Air and Heat</title>
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+    <link rel="stylesheet" href="styles/business-page.css">
+</head>
+
+<body>
+    <header class="sticky-header">
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <nav>
+            <div class="menu">Menu ▼</div>
+            <div class="menu-items">
+                <a href="#">Settings</a>
+                <a href="#">Chat Support</a>
+                <a href="business-sign-in.html">Log Out</a>
+            </div>
+        </nav>
+    </header>
+    <div class="header-bar">
+        <button class="back-button" onclick="window.location.href='business-account.html'">← Back</button>
+    </div>
+    <div class="container">
+        <div class="business-container">
+            <div class="section">
+                <div class="makeshift-logo">BAH</div> <!-- Makeshift logo -->
+                <div class="sub-heading">Boom Air and Heat</div>
+                <ul class="bullet-list bullet-list-types">
+                    <li>Christian Owned</li>
+                    <li>Black Owned</li>
+                    <li>Female Owned</li>
+                    <li>Veteran Owned</li>
+                    <li>Total Customers: 100</li> <!-- Update with dynamic total customers count -->
+                </ul>
+            </div>
+            <div class="section">
+                <h2>Customer Reviews</h2>
+                <div class="review">
+                    <p><strong>John Doe</strong></p>
+                    <p>Great service! Highly recommend.</p>
+                </div>
+                <div class="review">
+                    <p><strong>Jane Smith</strong></p>
+                    <p>Professional and reliable. Will use again.</p>
+                </div>
+                <!-- Add more reviews as needed -->
+                <p class="more-reviews">More Reviews</p>
+                <p>Total Reviews: 2</p> <!-- Update with dynamic total reviews count -->
+            </div>
+            <div class="section section-adverts">
+                <h2>Adverts</h2>
+                <!-- Adverts will be dynamically loaded here -->
+            </div>
+            <div class="section section-gallery">
+                <h2>Gallery</h2>
+                <div class="gallery-container" id="gallery-container">
+                    <!-- Gallery images will be dynamically loaded here -->
+                </div>
+            </div>
+            <div class="section">
+                <h2>Certifications/Licenses/Accomplishments</h2>
+                <ul class="bullet-list bullet-list-awards">
+                    <li>Best HVAC Service 2023</li>
+                    <li>Top Rated Service on Yelp</li>
+                    <!-- Add more awards/accomplishments as needed -->
+                </ul>
+            </div>
+            <div class="section">
+                <h2>Philanthropy/Community Service</h2>
+                <ul class="bullet-list bullet-list-philanthropy">
+                    <li>Supported local food drives</li>
+                    <li>Participated in community clean-up events</li>
+                    <!-- Add more philanthropy/community service details as needed -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+    <button id="log-storage-button">Log Storage</button>
+    <div id="calendarModal" class="modal">
+        <div id="calendarContainer" class="modal-content">
+            <span class="close">&times;</span>
+            <!-- Calendar content will be dynamically loaded here -->
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check if the user is logged in
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                window.location.href = 'business-sign-in.html';
+                return;
+            }
+
+            document.querySelector(".header-logo").addEventListener("click", function () {
+                window.location.href = "plussible.html";
+            });
+
+            const menu = document.querySelector('.menu');
+            const menuItems = document.querySelector('.menu-items');
+            const logoutLink = document.querySelector('a[href="business-sign-in.html"]');
+
+            menu.addEventListener('click', function (event) {
+                menuItems.style.display = menuItems.style.display === 'none' ? 'block' : 'none';
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!menu.contains(event.target)) {
+                    menuItems.style.display = 'none';
+                }
+            });
+
+            // Log out functionality
+            logoutLink.addEventListener('click', function (event) {
+                event.preventDefault();
+                localStorage.removeItem('currentUser');
+                window.location.href = 'business-sign-in.html';
+            });
+
+            const moreReviews = document.querySelector('.more-reviews');
+            const reviews = document.querySelectorAll('.review');
+
+            if (reviews.length > 2) {
+                reviews.forEach((review, index) => {
+                    if (index >= 2) review.style.display = 'none';
+                });
+            }
+
+            moreReviews.addEventListener('click', function () {
+                reviews.forEach(review => review.style.display = 'block');
+                moreReviews.style.display = 'none';
+            });
+
+            // Retrieve business page data from localStorage
+            const currentUserData = JSON.parse(currentUser);
+            const userSpecificKey = `businessPages_${currentUserData.id}`;
+            const storedBusinessPageData = JSON.parse(localStorage.getItem(userSpecificKey)) || [];
+
+            const businessPageData = storedBusinessPageData.find(page => page.businessName === currentUserData.businessName);
+            if (businessPageData) {
+                // Update business name
+                const businessNameElement = document.querySelector('.sub-heading');
+                businessNameElement.textContent = businessPageData.businessName || 'Boom Air and Heat';
+
+                // Update the page title with the business name
+                document.getElementById('page-title').textContent = businessPageData.businessName || 'Boom Air and Heat';
+
+                // Update logo
+                if (businessPageData.businessLogo) {
+                    const logoElement = document.querySelector('.makeshift-logo');
+                    logoElement.style.backgroundImage = `url(${businessPageData.businessLogo})`;
+                    logoElement.style.backgroundSize = 'cover';
+                    logoElement.textContent = ''; // Clear text content if logo is set
+                }
+
+                // Update noteworthy business details
+                const bulletListTypes = document.querySelector('.bullet-list-types');
+                bulletListTypes.innerHTML = '';
+                businessPageData.types.forEach(type => {
+                    const li = document.createElement('li');
+                    li.textContent = type;
+                    bulletListTypes.appendChild(li);
+                });
+
+                // Update awards
+                const bulletListAwards = document.querySelector('.bullet-list-awards');
+                bulletListAwards.innerHTML = '';
+                businessPageData.awards.forEach(award => {
+                    const li = document.createElement('li');
+                    li.textContent = award;
+                    bulletListAwards.appendChild(li);
+                });
+
+                // Update philanthropy
+                const bulletListPhilanthropy = document.querySelector('.bullet-list-philanthropy');
+                bulletListPhilanthropy.innerHTML = '';
+                businessPageData.philanthropy.forEach(philanthropy => {
+                    const li = document.createElement('li');
+                    li.textContent = philanthropy;
+                    bulletListPhilanthropy.appendChild(li);
+                });
+
+                // Load gallery images from local storage
+                const galleryContainer = document.getElementById('gallery-container');
+                galleryContainer.innerHTML = '';
+                businessPageData.galleryImages.slice(0, 5).forEach(image => {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = image;
+                    imgElement.alt = 'Gallery Image';
+                    imgElement.classList.add('gallery-image');
+                    galleryContainer.appendChild(imgElement);
+                });
+            } else {
+                console.error("Business page data not found for the current user.");
+            }
+
+            // Retrieve and display adverts for the current user
+            const offerList = document.querySelector('.section-adverts');
+            const allAdvertsKeys = Object.keys(localStorage).filter(key => key.startsWith('user_') && key.endsWith('_serviceAdverts'));
+            let userAdverts = [];
+            allAdvertsKeys.forEach(key => {
+                const adverts = JSON.parse(localStorage.getItem(key)) || [];
+                adverts.forEach(advert => {
+                    if (advert.businessName === currentUserData.businessName) {
+                        userAdverts.push(advert);
+                    }
+                });
+            });
+
+            if (userAdverts.length === 0) {
+                const noAdvertsMessage = document.createElement('p');
+                noAdvertsMessage.textContent = 'No adverts available.';
+                offerList.appendChild(noAdvertsMessage);
+            } else {
+                userAdverts.forEach(offer => {
+                    const workHoursData = JSON.parse(localStorage.getItem('workHoursData') || '[]');
+                    const offerWorkHours = workHoursData.filter(wh => wh.name === offer.name);
+                    if (offerWorkHours.length === 0) return; // Skip if no work hours data found for the offer
+
+                    const offerCard = document.createElement('div');
+                    offerCard.classList.add('offer-card');
+                    offerCard.innerHTML = `
+                        <div class="left">
+                            <img src="${offer.image}" alt="${offer.name}">
+                        </div>
+                        <div class="middle">
+                            <div class="offer-name">
+                                <a href="cs-business-page.html?businessName=${encodeURIComponent(offer.businessName)}">${offer.businessName}</a>
+                            </div>
+                            <div class="offer-chat">
+                                <button>Active</button>
+                            </div>
+                            <div class="service-engaged">Service Engaged (${offer.engagementCount || 0} times)</div>
+                            <div class="offer-rating">
+                                <span class="star">&#9733;</span>
+                                <span>${offer.rating}</span>
+                            </div>
+                            <div class="offer-reviews">
+                                ${offer.reviews} reviews
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="price">$${offer.price}</div>
+                            <div class="service">${offer.name}</div>
+                            <div class="details">Duration: ${offer.duration}</div>
+                            <div class="details">Extras: ${offer.extras}</div>
+                            <div class="details">${offer.distance}</div>
+                            <a href="#" class="engage-btn" onclick="showCalendar('${offer.name}', '${offer.priceType}', '${offer.duration}')">Engage Service</a>
+                        </div>
+                    `;
+                    offerList.appendChild(offerCard);
+                });
+            }
+
+            // Log storage contents
+            document.getElementById('log-storage-button').addEventListener('click', function () {
+                logStorageItems();
+            });
+
+            function logStorageItems() {
+                console.log("Service Adverts:", JSON.parse(localStorage.getItem('serviceAdverts')) || []);
+                console.log("Public Adverts:", JSON.parse(localStorage.getItem('publicAdverts')) || []);
+                const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+                const userSpecificKey = `user_${currentUser.id}_serviceAdverts`;
+                console.log("User Specific Service Adverts:", JSON.parse(localStorage.getItem(userSpecificKey)) || []);
+                console.log("Business Page Data:", JSON.parse(localStorage.getItem('businessPages')) || []);
+                console.log("Search Results:", JSON.parse(localStorage.getItem('searchResults')) || []);
+                console.log("Search Query:", localStorage.getItem('searchQuery') || '');
+                console.log("User Zip Code:", localStorage.getItem('userZipCode') || '');
+                console.log("Work Hours Data:", JSON.parse(localStorage.getItem('workHoursData')) || []);
+                console.log("Selected Time Slots:", JSON.parse(localStorage.getItem('selectedTimeSlots')) || []);
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const headerLogo = document.querySelector(".header-logo img");
+            if (headerLogo) {
+                headerLogo.addEventListener("click", function () {
+                    window.location.href = "plussible.html";
+                });
+            }
+        });
+
+        // Modal and calendar functionality
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("calendarModal");
+            const closeBtn = document.querySelector(".close");
+
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        function showCalendar(offerName, priceType, duration) {
+            console.log(`showCalendar called for offer: ${offerName}`);
+            const allAdvertsKeys = Object.keys(localStorage).filter(key => key.startsWith('user_') && key.endsWith('_serviceAdverts'));
+            let allAdverts = [];
+            allAdvertsKeys.forEach(key => {
+                const adverts = JSON.parse(localStorage.getItem(key)) || [];
+                allAdverts = allAdverts.concat(adverts);
+            });
+            const offer = allAdverts.find(offer => offer.name === offerName);
+
+            if (!offer) {
+                console.error(`Offer not found: ${offerName}`);
+                return;
+            }
+
+            if (priceType === 'fixed') {
+                console.log(`Fixed price detected for offer: ${offerName}`);
+                displayServiceProviderList(offer, duration);
+            } else {
+                const modal = document.getElementById("calendarModal");
+                const calendarContainer = document.getElementById("calendarContainer");
+                modal.style.display = "block";
+                generateCalendar(offerName, calendarContainer, duration);
+            }
+        }
+
+        function displayServiceProviderList(offer, duration) {
+            console.log('displayServiceProviderList called');
+            const serviceProviderListContainer = document.createElement('div');
+            serviceProviderListContainer.classList.add('service-provider-list-container');
+
+            const workHoursData = JSON.parse(localStorage.getItem('workHoursData') || '[]');
+            const performers = [...new Set(workHoursData.filter(wh => wh.name === offer.name).map(wh => wh.performer))];
+
+            console.log('Performers:', performers);
+
+            const promptText = document.createElement('p');
+            promptText.textContent = 'Select Service Provider:';
+            serviceProviderListContainer.appendChild(promptText);
+
+            performers.forEach(performer => {
+                console.log(`Adding button for performer: ${performer}`);
+                const performerButton = document.createElement('button');
+                performerButton.textContent = performer;
+                performerButton.onclick = (event) => {
+                    event.preventDefault();
+                    console.log(`Performer selected: ${performer}`);
+                    document.getElementById("calendarModal").style.display = "block";
+                    generateCalendarForPerformer(performer, duration, offer.name);
+                };
+                serviceProviderListContainer.appendChild(performerButton);
+            });
+
+            const calendarContainer = document.getElementById('calendarContainer');
+            calendarContainer.innerHTML = '';
+            calendarContainer.appendChild(serviceProviderListContainer);
+
+            const modal = document.getElementById("calendarModal");
+            modal.style.display = "block";
+
+            console.log('Service Provider list container appended to calendar container');
+        }
+
+        let currentYear, currentMonth;
+
+        function generateCalendarForPerformer(performerName, duration, offerName) {
+            console.log(`generateCalendarForPerformer called for performer: ${performerName}`);
+            const modal = document.getElementById("calendarModal");
+            const calendarContainer = document.getElementById("calendarContainer");
+
+            modal.style.display = "block";
+
+            if (currentYear === undefined || currentMonth === undefined) {
+                const date = new Date();
+                currentYear = date.getFullYear();
+                currentMonth = date.getMonth();
+            }
+
+            generateCalendar(performerName, calendarContainer, duration, currentYear, currentMonth, offerName);
+        }
+
+        function generateCalendar(performerName, container, duration, year, month, offerName) {
+            console.log(`generateCalendar called for performer: ${performerName}`);
+            const workHoursData = JSON.parse(localStorage.getItem('workHoursData') || '[]');
+            const workHours = workHoursData.filter(wh => wh.performer === performerName);
+
+            if (workHours.length === 0) {
+                console.error(`Work hours data not found for performer: ${performerName}`);
+                return;
+            }
+
+            const date = new Date(year, month);
+            const monthName = date.toLocaleString('default', { month: 'long' });
+
+            const workHoursForDay = workHours[0];
+            const startTime = parseTime(workHoursForDay.workHoursStart);
+            const endTime = parseTime(workHoursForDay.workHoursEnd);
+            const serviceDuration = parseDuration(duration);
+
+            container.innerHTML = `
+                <h2>
+                    ${month > new Date().getMonth() || year > new Date().getFullYear() ? `<button onclick="changeMonth(-1, '${performerName}', '${duration}', '${offerName}')">«</button>` : ''}
+                    ${monthName} ${year}
+                    <button onclick="changeMonth(1, '${performerName}', '${duration}', '${offerName}')">»</button>
+                </h2>
+                <table class="calendar">
+                    <thead>
+                        <tr>
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${generateCalendarRows(new Date(year, month, 1).getDay(), new Date(year, month + 1, 0).getDate(), workHours, duration, performerName, startTime, endTime, serviceDuration, offerName)}
+                    </tbody>
+                </table>
+            `;
+            console.log('Calendar generated and displayed');
+        }
+
+        function changeMonth(offset, performerName, duration, offerName) {
+            const now = new Date();
+            const current = new Date(currentYear, currentMonth);
+            const nextMonth = new Date(current.setMonth(currentMonth + offset));
+
+            if (nextMonth >= now || nextMonth.getFullYear() > now.getFullYear() || nextMonth.getMonth() >= now.getMonth()) {
+                currentMonth = nextMonth.getMonth();
+                currentYear = nextMonth.getFullYear();
+                generateCalendar(performerName, document.getElementById('calendarContainer'), duration, currentYear, currentMonth, offerName);
+            }
+        }
+
+        function generateCalendarRows(firstDayOfWeek, daysInMonth, workHours, duration, performerName, startTime, endTime, serviceDuration, offerName) {
+            let rows = '';
+            let day = 1;
+            const selectedTimeSlots = JSON.parse(localStorage.getItem('selectedTimeSlots') || '[]');
+
+            for (let i = 0; i < 6; i++) {
+                rows += '<tr>';
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < firstDayOfWeek) {
+                        rows += '<td></td>';
+                    } else if (day > daysInMonth) {
+                        rows += '<td></td>';
+                    } else {
+                        const currentDate = new Date(currentYear, currentMonth, day);
+                        const now = new Date();
+
+                        const isPastDate = currentDate < now && currentDate.toDateString() !== now.toDateString();
+                        const dayOfWeek = currentDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+                        const isWorkDay = workHours.some(wh => wh.day.toLowerCase() === dayOfWeek);
+
+                        if (isWorkDay) {
+                            const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
+                            const timeSlotsForDay = selectedTimeSlots.filter(slot => slot.date === dateStr && slot.performerName === performerName);
+
+                            const availableSlots = getAvailableSlotsForDay(startTime, endTime, serviceDuration, timeSlotsForDay, currentDate);
+
+                            if (availableSlots.length > 0 && !isPastDate) {
+                                rows += `<td class="selectable" onclick="selectDate(${day}, '${encodeURIComponent(JSON.stringify(workHours))}', '${duration}', '${performerName}', '${offerName}', event)">${day}</td>`;
+                            } else if (isPastDate) {
+                                rows += `<td class="past-date" title="This date has passed">${day}</td>`;
+                            } else {
+                                rows += `<td class="disabled" title="This day is fully booked">${day}</td>`;
+                            }
+                        } else {
+                            rows += `<td class="disabled" title="Business isn't working on this day">${day}</td>`;
+                        }
+                        day++;
+                    }
+                }
+                rows += '</tr>';
+            }
+
+            return rows;
+        }
+
+        function getAvailableSlotsForDay(startTime, endTime, serviceDuration, timeSlotsForDay, currentDate) {
+            let availableSlots = [];
+            const now = new Date();
+
+            for (let time = startTime; time + serviceDuration <= endTime; time += serviceDuration) {
+                const slotStart = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), time / (60 * 60 * 1000), (time % (60 * 60 * 1000)) / (60 * 1000));
+                const slotEnd = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), (time + serviceDuration) / (60 * 60 * 1000), ((time + serviceDuration) % (60 * 60 * 1000)) / (60 * 1000));
+
+                if (slotStart > now) {
+                    const isSlotTaken = timeSlotsForDay.some(slot => {
+                        const slotStart = parseTime(slot.start);
+                        const slotEnd = parseTime(slot.end);
+                        return (slotStart <= time && slotEnd >= time + serviceDuration) || (slotStart < time + serviceDuration && slotEnd > time);
+                    });
+                    if (!isSlotTaken) {
+                        availableSlots.push({ start: formatTime(time), end: formatTime(time + serviceDuration) });
+                    }
+                }
+            }
+            return availableSlots;
+        }
+
+        function selectDate(day, workHours, duration, performerName, offerName, event) {
+            console.log(`selectDate called for day: ${day}`);
+            const parsedWorkHours = JSON.parse(decodeURIComponent(workHours));
+            const timeSlotContainer = document.createElement('div');
+            timeSlotContainer.classList.add('time-slot-container');
+
+            const selectedDay = new Date(currentYear, currentMonth, day);
+            const dayOfWeek = selectedDay.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+
+            const workHoursForDay = parsedWorkHours.find(wh => wh.day.toLowerCase() === dayOfWeek);
+            if (!workHoursForDay) {
+                console.error(`Work hours not found for day: ${dayOfWeek}`);
+                return;
+            }
+
+            const startTime = parseTime(workHoursForDay.workHoursStart);
+            const endTime = parseTime(workHoursForDay.workHoursEnd);
+            const serviceDuration = parseDuration(duration);
+
+            const existingTimeSlotContainers = document.querySelectorAll('.time-slot-container');
+            existingTimeSlotContainers.forEach(container => container.remove());
+
+            const selectedTimeSlots = JSON.parse(localStorage.getItem('selectedTimeSlots') || '[]');
+            const selectedTimeSlotsForDay = selectedTimeSlots.filter(slot => slot.date === `${currentYear}-${currentMonth + 1}-${day}` && slot.performerName === performerName);
+
+            const availableSlots = getAvailableSlotsForDay(startTime, endTime, serviceDuration, selectedTimeSlotsForDay, selectedDay);
+
+            availableSlots.forEach(slot => {
+                const button = document.createElement('button');
+                button.textContent = `${slot.start} - ${slot.end}`;
+                button.onclick = (event) => {
+                    event.preventDefault();
+                    selectTimeSlot(slot.start, slot.end, performerName, day, selectedDay, offerName);
+                };
+                timeSlotContainer.appendChild(button);
+            });
+
+            document.getElementById('calendarContainer').appendChild(timeSlotContainer);
+
+            // Change color for the selected date
+            const previouslySelected = document.querySelector('.calendar td.selected');
+            if (previouslySelected) {
+                previouslySelected.classList.remove('selected');
+            }
+            event.target.classList.add('selected');
+        }
+
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+        }
+
+        function formatTime(time) {
+            const hours = Math.floor(time / (60 * 60 * 1000));
+            const minutes = (time % (60 * 60 * 1000)) / (60 * 1000);
+            return `${hours}:${minutes.toString().padStart(2, '0')}`;
+        }
+
+        function parseDuration(durationStr) {
+            const [value, unit] = durationStr.split(' ');
+            const duration = parseInt(value, 10);
+
+            if (unit.includes('hour')) {
+                return duration * 60 * 60 * 1000;
+            } else if (unit.includes('minute')) {
+                return duration * 60 * 1000;
+            }
+            return 0;
+        }
+
+        function selectTimeSlot(start, end, performerName, day, selectedDay, offerName) {
+            const formattedDate = selectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            alert(`You have selected the time slot from ${start} to ${end} on ${formattedDate}`);
+
+            const selectedTimeSlots = JSON.parse(localStorage.getItem('selectedTimeSlots') || '[]');
+            selectedTimeSlots.push({ performerName, date: `${currentYear}-${currentMonth + 1}-${day}`, start, end, offerName });
+            localStorage.setItem('selectedTimeSlots', JSON.stringify(selectedTimeSlots));
+
+            updateServiceEngagementCount(offerName);
+            location.reload();  // Refresh the page
+        }
+
+        function updateServiceEngagementCount(offerName) {
+            const allAdvertsKeys = Object.keys(localStorage).filter(key => key.startsWith('user_') && key.endsWith('_serviceAdverts'));
+            allAdvertsKeys.forEach(key => {
+                let adverts = JSON.parse(localStorage.getItem(key)) || [];
+                const offerIndex = adverts.findIndex(offer => offer.name === offerName);
+                if (offerIndex !== -1) {
+                    adverts[offerIndex].engagementCount = (adverts[offerIndex].engagementCount || 0) + 1;
+                    localStorage.setItem(key, JSON.stringify(adverts));
+                }
+            });
+        }
+
+        function logStorageContents() {
+            console.log("serviceAdverts:", JSON.parse(localStorage.getItem('serviceAdverts') || '[]'));
+            console.log("searchResults:", JSON.parse(localStorage.getItem('searchResults') || '[]'));
+            console.log("searchQuery:", localStorage.getItem('searchQuery') || '');
+            console.log("userZipCode:", localStorage.getItem('userZipCode') || '');
+            console.log("workHoursData:", JSON.parse(localStorage.getItem('workHoursData') || '[]'));
+            console.log("selectedTimeSlots:", JSON.parse(localStorage.getItem('selectedTimeSlots') || '[]'));
+        }
+
+        // Call the logStorageContents function to log the contents of local storage
+        logStorageContents();
+    </script>
+</body>
+
+</html>

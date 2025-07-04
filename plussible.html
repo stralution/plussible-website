@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plussible</title>
+  <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png" />
+  <link rel="stylesheet" href="styles/plussible.css" />
+  <script src="scripts/user-location/location.js"></script>
+  <script src="scripts/footer/footer.js"></script>
+  <script src="scripts/plussible.js" defer></script>
+  <style>
+    /* Animated placeholder overlay inside input */
+    .animated-placeholder {
+      position: absolute;
+      top: 50%;
+      left: 40px;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #aaa;
+      font-style: italic;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: calc(100% - 50px);
+      border-right: 2px solid #007aff;
+      box-sizing: border-box;
+      animation: blink-caret 1s step-end infinite;
+      z-index: 10;
+    }
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: #007aff; }
+    }
+    #pi-box input[type="text"],
+    #pi-box input[type="date"],
+    #pi-box textarea {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-sizing: border-box;
+      resize: vertical;
+      font-family: inherit;
+      transition: border-color 0.3s ease;
+      margin-bottom: 12px;
+    }
+    #pi-box textarea {
+      min-height: 100px;
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+    #time-picker {
+      display: none;
+    }
+    #custom-time-picker {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-sizing: border-box;
+      font-family: inherit;
+      margin-bottom: 12px;
+      cursor: pointer;
+      background: white;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, #007aff 50%),
+        linear-gradient(135deg, #007aff 50%, transparent 50%);
+      background-position:
+        calc(100% - 20px) calc(1em + 2px),
+        calc(100% - 15px) calc(1em + 2px);
+      background-size: 5px 5px;
+      background-repeat: no-repeat;
+    }
+    .input-error {
+      border-color: #ff3b30 !important;
+      box-shadow: 0 0 5px #ff3b30 !important;
+      background-color: #fff0f0;
+    }
+    .validation-message {
+      color: #ff3b30;
+      font-size: 0.85em;
+      margin-top: -10px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    @media (max-width: 768px) {
+      #pi-box {
+        width: 95% !important;
+        padding: 20px 20px 25px 20px !important;
+        font-size: 0.9em !important;
+      }
+      #pi-box input[type="text"],
+      #pi-box input[type="date"],
+      #pi-box textarea,
+      #custom-time-picker {
+        font-size: 0.9em !important;
+        padding: 8px 10px !important;
+      }
+      #find-expert-btn {
+        font-size: 0.95em !important;
+        padding: 8px 18px !important;
+      }
+      #pi-box h3 {
+        font-size: 1.3em !important;
+      }
+    }
+    @media (max-width: 480px) {
+      #pi-box {
+        font-size: 0.85em !important;
+        padding: 15px 15px 20px 15px !important;
+      }
+      #pi-box input[type="text"],
+      #pi-box input[type="date"],
+      #pi-box textarea,
+      #custom-time-picker {
+        font-size: 0.85em !important;
+        padding: 6px 8px !important;
+      }
+      #find-expert-btn {
+        font-size: 0.9em !important;
+        padding: 6px 14px !important;
+      }
+      #pi-box h3 {
+        font-size: 1.1em !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="sign-up.html" class="header-button">Sign Up</a>
+    <a href="sign-in.html" class="header-button">Sign In</a>
+  </header>
+  <div class="container">
+    <div class="image-placeholder">
+      <img src="plussible logo/plussible logo.png" alt="Plussible Logo" />
+    </div>
+    <div class="search-box">
+      <div class="input-with-icon" style="position:relative;">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="text" autocomplete="off" />
+        <!-- Animated placeholder overlay -->
+        <div id="animated-placeholder" class="animated-placeholder" aria-hidden="true"></div>
+        <div class="dropdown" style="display:none;">
+          <div class="dropdown-header">🔥 Trending Searches</div>
+          <div class="trend-item">
+            <span class="trend-title">Swedish Massage</span>
+            <svg class="sparkline" viewBox="0 0 100 20"><polyline points="0,15 20,10 40,12 60,5 80,9 100,3" /></svg>
+          </div>
+          <div class="trend-item">
+            <span class="trend-title">Plumber</span>
+            <svg class="sparkline" viewBox="0 0 100 20"><polyline points="0,12 20,14 40,10 60,6 80,5 100,4" /></svg>
+          </div>
+          <div class="trend-item">
+            <span class="trend-title">Hair Stylist</span>
+            <svg class="sparkline" viewBox="0 0 100 20"><polyline points="0,18 20,15 40,10 60,12 80,14 100,9" /></svg>
+          </div>
+        </div>
+      </div>
+      <div class="search-buttons">
+        <button id="quick-search-btn">Quick Search</button>
+        <button id="pi-open-btn" aria-describedby="pi-desc">Plussible Intelligence</button>
+      </div>
+      <div class="error-message"></div>
+    </div>
+  </div>
+  <!-- Plussible Intelligence Modal -->
+  <div id="pi-box" role="dialog" aria-modal="true" aria-labelledby="pi-title" tabindex="-1" style="display:none; position: fixed;">
+    <button id="pi-close-btn" aria-label="Close Plussible Intelligence">×</button>
+    <h3 id="pi-title">Plussible Intelligence</h3>
+    <label for="expert-type-input">Expert Type</label>
+    <input type="text" id="expert-type-input" placeholder="Expert Type" />
+    <label for="preferred-date">Preferred Date</label>
+    <input type="date" id="preferred-date" />
+    <label for="preferred-time">Preferred Time</label>
+    <input type="time" id="time-picker" />
+    <select id="custom-time-picker" aria-label="Preferred Time">
+      <option value="">Select a time</option>
+    </select>
+    <label for="additional-details">Additional Details</label>
+    <textarea id="additional-details" placeholder="Add any specific requirements..."></textarea>
+    <button id="find-expert-btn">Find Best Expert</button>
+  </div>
+  <footer>
+    <!-- Footer content will be loaded here -->
+  </footer>
+  <!-- EINSTEIN'S FULL MATCHING + CONSOLE DEBUG -->
+  <script>
+    function levenshtein(a, b) {
+      if (!a) return b.length;
+      if (!b) return a.length;
+      const matrix = Array.from({length: a.length + 1}, () => []);
+      for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+      for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          matrix[i][j] = a[i - 1] === b[j - 1]
+            ? matrix[i - 1][j - 1]
+            : 1 + Math.min(matrix[i - 1][j - 1], matrix[i][j - 1], matrix[i - 1][j]);
+        }
+      }
+      return matrix[a.length][b.length];
+    }
+    function normalize(str) {
+      return (str || '').toLowerCase().replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+    function getExtrasCount(extras) {
+      if (Array.isArray(extras)) return extras.length;
+      if (typeof extras === 'string' && extras.trim()) return extras.split(',').length;
+      return 0;
+    }
+    function parseNumber(val) {
+      const n = Number(val);
+      return isNaN(n) ? 0 : n;
+    }
+
+    // Open modal logic
+    document.getElementById('pi-open-btn').addEventListener('click', function () {
+      document.getElementById('pi-box').style.display = 'flex';
+    });
+    document.getElementById('pi-close-btn').addEventListener('click', function () {
+      document.getElementById('pi-box').style.display = 'none';
+    });
+
+    // Populate time picker options
+    document.addEventListener('DOMContentLoaded', function () {
+      const picker = document.getElementById('custom-time-picker');
+      if (picker && picker.options.length < 3) {
+        for (let h = 6; h < 22; h++) for (let m = 0; m < 60; m += 30)
+          picker.appendChild(new Option(`${(h%12||12)}:${m==0?'00':m} ${h<12?'AM':'PM'}`, `${h.toString().padStart(2,'0')}:${m==0?'00':m}`));
+      }
+    });
+
+    // -- Added: Special redirect for "massage" queries --
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('search-input');
+      const quickSearchBtn = document.getElementById('quick-search-btn');
+
+      quickSearchBtn.addEventListener('click', function (e) {
+        const value = (searchInput.value || '').toLowerCase();
+        if (
+          value.includes('massage') ||
+          value.includes('spa') ||
+          value.includes('swedish massage')
+        ) {
+          window.location.href = "search.html";
+          return;
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const findExpertBtn = document.getElementById('find-expert-btn');
+      const errorMessage = document.querySelector('.error-message');
+
+      findExpertBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const expertType = document.getElementById('expert-type-input').value.trim();
+        const date = document.getElementById('preferred-date').value.trim();
+        const time = document.getElementById('custom-time-picker').value.trim();
+        const details = document.getElementById('additional-details').value.trim();
+
+        if (!expertType || !date || !time || !details) {
+          errorMessage.textContent = 'Please fill all required fields.';
+          return;
+        }
+
+        const allAdvertsKeys = Object.keys(localStorage).filter(
+          key => key.startsWith('user_') && key.endsWith('_serviceAdverts')
+        );
+        let allAdverts = [];
+        allAdvertsKeys.forEach(key => {
+          const adverts = JSON.parse(localStorage.getItem(key)) || [];
+          allAdverts = allAdverts.concat(adverts);
+        });
+
+        const userQuery = normalize(expertType + " " + details);
+
+        let matchingAds = allAdverts.filter(ad => {
+          const adName = normalize(ad.name);
+          const tags = Array.isArray(ad.tags) ? ad.tags.map(normalize).join(' ') : normalize(ad.tags);
+          const nameDistance = levenshtein(userQuery, adName);
+          const tagsDistance = levenshtein(userQuery, tags);
+          const nameMatch = adName.includes(userQuery) || userQuery.includes(adName) || nameDistance <= 2;
+          const tagMatch = tags.includes(userQuery) || userQuery.includes(tags) || tagsDistance <= 2;
+          return nameMatch || tagMatch;
+        });
+
+        if (matchingAds.length === 0) {
+          showThinkingScreen();
+          return;
+        }
+
+        // Only score and show the single best ad
+        const stats = {
+          maxPrice: Math.max(...matchingAds.map(ad => parseNumber(ad.price))),
+          minPrice: Math.min(...matchingAds.map(ad => parseNumber(ad.price))),
+          maxDistance: Math.max(...matchingAds.map(ad => parseNumber(ad.distance))),
+          minDistance: Math.min(...matchingAds.map(ad => parseNumber(ad.distance))),
+          maxRating: Math.max(...matchingAds.map(ad => parseNumber(ad.rating))),
+          minRating: Math.min(...matchingAds.map(ad => parseNumber(ad.rating))),
+          maxExtrasCount: Math.max(...matchingAds.map(ad => getExtrasCount(ad.extras))),
+        };
+
+        matchingAds.forEach(ad => {
+          const price = parseNumber(ad.price);
+          const distance = parseNumber(ad.distance);
+          const rating = parseNumber(ad.rating);
+          const extrasCount = getExtrasCount(ad.extras);
+
+          // Price Score (2)
+          let priceScore = 0;
+          if (stats.maxPrice !== stats.minPrice) {
+            priceScore = ((stats.maxPrice - price) / (stats.maxPrice - stats.minPrice)) * 2;
+          } else if (price === stats.maxPrice) {
+            priceScore = 2;
+          }
+          // Closeness (3)
+          let closenessScore = 0;
+          if (stats.maxDistance !== stats.minDistance) {
+            closenessScore = ((stats.maxDistance - distance) / (stats.maxDistance - stats.minDistance)) * 3;
+          } else if (distance === stats.maxDistance) {
+            closenessScore = 3;
+          }
+          // Rating (3)
+          let ratingScore = 0;
+          if (stats.maxRating !== stats.minRating) {
+            ratingScore = ((rating - stats.minRating) / (stats.maxRating - stats.minRating)) * 3;
+          } else if (rating === stats.maxRating) {
+            ratingScore = 3;
+          }
+          // Extras (2)
+          let extrasScore = 0;
+          if (stats.maxExtrasCount > 0) {
+            extrasScore = (extrasCount / stats.maxExtrasCount) * 2;
+          }
+          priceScore = priceScore || 0;
+          closenessScore = closenessScore || 0;
+          ratingScore = ratingScore || 0;
+          extrasScore = extrasScore || 0;
+
+          ad.piScore = Math.round((priceScore + closenessScore + ratingScore + extrasScore) * 100) / 100;
+          // Debug each calculation
+          console.log(`[PI] ${ad.name}`, {
+            price, distance, rating, extrasCount,
+            priceScore, closenessScore, ratingScore, extrasScore,
+            piScore: ad.piScore
+          });
+        });
+
+        matchingAds.sort((a, b) => b.piScore - a.piScore);
+
+        // Show only the best expert, as a single result
+        const bestExpert = matchingAds[0];
+        localStorage.setItem('searchResults', JSON.stringify([bestExpert]));
+        localStorage.setItem('searchQuery', expertType + " " + details);
+
+        // Debug final sorted list
+        console.log("[PI] Final best expert:", bestExpert);
+
+        // Redirect immediately (no thinking) to so-search-page.html
+        window.location.href = 'so-search-page.html';
+      });
+
+      // --- Thinking overlay (unchanged) ---
+      function showThinkingScreen(callback) {
+        let overlay = document.getElementById('thinking-overlay');
+        if (overlay) overlay.remove();
+
+        overlay = document.createElement('div');
+        overlay.id = 'thinking-overlay';
+        Object.assign(overlay.style, {
+          position: 'fixed',
+          top: '0', left: '0', right: '0', bottom: '0',
+          backgroundColor: 'rgba(255,255,255,0.96)',
+          backdropFilter: 'blur(16px)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: '99999',
+          fontSize: '1.6rem',
+          color: '#007aff',
+          fontWeight: '600',
+          userSelect: 'none',
+          transition: 'opacity 0.4s',
+          opacity: '0'
+        });
+        const brain = document.createElement('div');
+        brain.textContent = '🧠';
+        brain.style.fontSize = '6rem';
+        brain.style.marginBottom = '1.2rem';
+        brain.style.animation = 'pulse 2s infinite ease-in-out';
+        overlay.appendChild(brain);
+        const text = document.createElement('div');
+        text.textContent = 'Thinking...';
+        overlay.appendChild(text);
+        document.body.appendChild(overlay);
+        setTimeout(() => {
+          overlay.style.opacity = '1';
+        }, 10);
+        setTimeout(() => {
+          if (typeof callback === "function") {
+            callback();
+          } else {
+            text.textContent = 'No expert found for the entered details.';
+            setTimeout(() => {
+              overlay.style.opacity = '0';
+              setTimeout(() => { overlay.remove(); }, 500);
+            }, 2000);
+          }
+        }, 2000);
+      }
+      if (!document.getElementById('pulse-anim-style')) {
+        const style = document.createElement('style');
+        style.id = 'pulse-anim-style';
+        style.textContent = `
+        @keyframes pulse {
+          0%,100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.12); opacity: 0.78; }
+        }
+        `;
+        document.head.appendChild(style);
+      }
+    });
+  </script>
+</body>
+</html>

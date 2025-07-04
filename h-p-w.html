@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Plussible Works</title>
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+    <style>
+         body, html {
+            font-family: 'Arial', sans-serif;
+              width: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+         header.sticky-header {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  justify-content: space-between; 
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header-logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .header-logo img {
+            max-height: 50px;
+        }
+        .header-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            color: #0092FF;;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        /*.header-button:hover {
+            background-color: #0056b3;
+        }*/
+        .container {
+             flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+            padding: 60px 0 40px 0;
+            gap: 0;
+            margin: 0 auto;
+            max-width: 650px;
+            width: 100%;
+        }
+        .content-box {
+            width: 100%;
+            padding: 36px 28px 28px 28px;
+            border-radius: 32px;
+            background: #fff;
+            box-shadow: 0 4px 48px rgba(40,90,255,0.07), 0 1.5px 7px rgba(22,34,51,0.03);
+            margin: 0 auto;
+            position: relative;
+            transition: box-shadow .2s;
+            overflow: hidden;
+        }
+        .content-box:hover {
+            box-shadow: 0 8px 64px 2px rgba(0,120,255,0.09), 0 1.5px 7px rgba(22,34,51,0.04);
+        }
+        .content-box h2 {
+            font-size: 2.35rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            margin-top: 0;
+            letter-spacing: -.02em;
+            color: #007aff;
+            text-align: left;
+            background: linear-gradient(90deg, #0fa8ff 0%, #007aff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .content-step {
+            margin-bottom: 38px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid #eef2fa;
+            position: relative;
+        }
+        .content-step:last-child {
+            border-bottom: none;
+        }
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        .step-number {
+            display: inline-block;
+            font-size: 1.15rem;
+            background: #e7f1ff;
+            color: #007aff;
+            border-radius: 12px;
+            padding: 4px 13px;
+            font-weight: 600;
+            margin-bottom: 13px;
+            margin-right: 9px;
+            letter-spacing: .03em;
+            vertical-align: middle;
+        }
+        .content-box h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 42px;
+            margin-bottom: 16px;
+            letter-spacing: -.01em;
+        }
+        .content-box p {
+            font-size: 1.13rem;
+            line-height: 1.75;
+            color: #222e39;
+            margin-bottom: 0;
+        }
+        .callout {
+            background: #e7f1ff;
+            color: #007aff;
+            font-size: 1.03rem;
+            border-radius: 13px;
+            padding: 9px 17px;
+            font-weight: 600;
+            margin-top: 14px;
+            margin-bottom: 14px;
+            display: inline-block;
+        }
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #0fa8ff 0%, #007aff 100%);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            letter-spacing: .02em;
+            padding: 13px 38px;
+            margin-top: 21px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 14px rgba(40,90,255,0.07);
+            transition: background 0.2s, box-shadow 0.15s, transform 0.13s;
+            outline: none;
+        }
+        .cta-btn:hover, .cta-btn:focus {
+            background: linear-gradient(90deg, #0092ff 0%, #005eea 100%);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 7px 32px rgba(0,122,255,0.11);
+        }
+        .sample-matches, .sample-book {
+            margin: 18px 0 10px 0;
+        }
+        .divider {
+            margin: 34px 0 24px 0;
+            border: none;
+            border-top: 1px solid #eef2fa;
+            width: 100%;
+        }
+        .for-users, .for-experts {
+            margin-top: 44px;
+            margin-bottom: 24px;
+        }
+        .benefit-list {
+            list-style: none;
+            margin: 0 0 18px 0;
+            padding: 0;
+            color: #222e39;
+            font-size: 1.08rem;
+        }
+        .benefit-list li {
+            margin-bottom: 9px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .benefit-list li .emoji {
+            font-size: 1.14em;
+            margin-right: 11px;
+        }
+        .subtle {
+            color: #7e94a6;
+            font-size: 0.97em;
+            margin-top: 7px;
+        }
+        .side-note {
+            background: #f6fafd;
+            color: #7e94a6;
+            padding: 10px 15px;
+            border-radius: 13px;
+            font-size: 0.96em;
+            margin-bottom: 0;
+            margin-top: 12px;
+        }
+        .service-business {
+            margin-top: 60px;
+            padding-top: 16px;
+        }
+        
+@media (max-width: 600px) {
+    html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        /* overflow-x: hidden; <-- Comment this out for debugging sticky issues! */
+    }
+    .container {
+        width: 100%;
+        min-width: 0;
+        max-width: 100vw; /* <-- Use 100vw instead of 100% to avoid unexpected scroll */
+        padding: 18px 2vw 16px 2vw;
+        box-sizing: border-box;
+        /* overflow: unset; <-- Make sure there is no overflow here! */
+    }
+    .content-box {
+        padding: 12px 4vw 12px 4vw;
+        border-radius: 16px;
+        font-size: 1em;
+        box-sizing: border-box;
+    }
+    header.sticky-header {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  justify-content: space-between; 
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+}
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".header-logo").addEventListener("click", function() {
+                window.location.href = "plussible.html";
+            });
+        });
+    </script>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <a href="sign-in.html" class="header-button">Sign In</a>
+    </header>
+    <div class="container">
+        <div class="content-box">
+
+            <h2>How Plussible Works</h2>
+
+            <!-- Step 1 -->
+            <div class="content-step">
+                <span class="step-icon"></span>
+                <b class="step-icon">A simpler way to find and book the right expert</b>
+                <p>Tell us what you need, in your own words. Spelling? Doesn’t matter. Just describe it “fix my leaky sink,” “SAT math tutor,” “logo for startup.” Plussible gets it, every time.</p>
+                <div class="callout">✨ Trusted by real people. Safe payments. Fast results.</div>
+                <button class="cta-btn" onclick="window.location.href='plussible.html'">Start Your Search</button>
+
+            </div>
+
+            <!-- Step 2 -->
+            <div class="content-step">
+
+                <b class="step-icon">Get trusted matches instantly</b>
+                <p>We scan thousands of real experts: plumbers, tutors, stylists, coders, and more. You get a clear, side-by-side list, ranked for you. <br>
+                <ul class="benefit-list">
+                    <li><span class="emoji">✅</span> Verified providers</li>
+                    <li><span class="emoji">🌟</span> Rated by real people</li>
+                    <li><span class="emoji">⚖️</span> Instantly compare price, rating, distance, extras</li>
+                </ul>
+                <div class="side-note">💬 “Experts respond super fast”</div>
+                <button class="cta-btn sample-matches" onclick="window.location.href='plussible.html'">View Sample Matches</button>
+                <div class="subtle">🎯 Experts sorted by value, not ad spend</div>
+                </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="content-step">
+
+                <b class="step-icon">Compare. Choose. Book.</b>
+                <p>No awkward calls. No mystery prices. Just pick your expert, see all details upfront, and book in seconds. <br>
+                    <br>
+                    <span class="side-note">💸 “4.9★ based on over 1,200 verified bookings”</span>
+                    <br>
+                    <button class="cta-btn sample-book" onclick="window.location.href='plussible.html'">Book Now With Confidence</button>
+                </p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="content-step">
+
+                <b class="step-icon">Pay securely, only when the job is done</b>
+                <p>Plussible protects your money with secure escrow. Only pay when you’re satisfied. No scams. No stress. No chasing anyone down.
+                    <br>
+                    <br>
+                    <span class="side-note">💳 Secure checkout. Instant confirmation.</span>
+                </p>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="content-step">
+
+                <b class="step-icon">Review and share</b>
+                <p>After your job, rate your expert and help others. Want to rebook? One tap.</p>
+                <br>
+                    <br>
+
+                <span class="side-note">🔁 “Experts with 5-star reviews get rebooked more often.”</span>
+                <button class="cta-btn" onclick="window.location.href='plussible.html'">Leave a Quick Review</button>
+            </div>
+
+            <hr class="divider">
+
+            <div class="for-users">
+                <b class="step-icon">For Customers</b>
+                <br>
+                    <br>
+                    
+                <ul class="benefit-list">
+                    <li><span class="emoji">🚫</span> No endless scrolling</li>
+                    <li><span class="emoji">☎️</span> No phone calls</li>
+                    <li><span class="emoji">🎯</span> No mystery prices</li>
+                    <li><span class="emoji">👻</span> No ghosting</li>
+                    <li><span class="emoji">✅</span> Confidence, and control</li>
+                </ul>
+                <div class="callout">💡 Get your time and peace of mind back.<br>Try Plussible free.</div>
+                <button class="cta-btn" onclick="window.location.href='plussible.html'">Search Experts Near You</button>
+            </div>
+
+            <hr class="divider">
+
+            <div class="for-experts">
+                <b class="step-icon">For Service Experts</b>
+                <br>
+                    <br>
+                <ul class="benefit-list">
+                    <li><span class="emoji">🔍</span> Get discovered by real customers</li>
+                    <li><span class="emoji">💰</span> No ad spend. No fake leads.</li>
+                    <li><span class="emoji">💼</span> Get booked and paid fast</li>
+                    <li><span class="emoji">💬</span> Let your work speak for itself</li>
+                </ul>
+
+                <button class="cta-btn" onclick="window.location.href='business-sign-up.html'">Join as an Expert</button>
+            </div>
+
+            <hr class="divider">
+
+            <div class="content-step">
+
+                <b class="step-icon">Built for Trust</b>
+                <br>
+                    <br>
+                <ul class="benefit-list">
+                    <li><span class="emoji">🪪</span> Verified providers</li>
+                    <li><span class="emoji">💵</span> Transparent pricing</li>
+                    <li><span class="emoji">🔐</span> Escrow protection</li>
+                    <li><span class="emoji">⚖️</span> Fair resolution if anything goes wrong</li>
+                    <li><span class="emoji">🧭</span> See who your friends trust</li>
+                </ul>
+                <div class="side-note">🧘 Calm. Fair. Transparent. Plussible was built to protect both sides.</div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="callout" style="display:block;text-align:center;">
+                Simple. Safe. Smart.<br>
+                <br>
+                <span style="font-size:1.12em;font-weight:700;color:#0092ff;">Get started in seconds.</span>
+            </div>
+            <button class="cta-btn" style="display:block;margin:24px auto 0 auto;" onclick="window.location.href='plussible.html'">Get Started</button>
+            <div class="side-note" style="text-align:center;">💬 Need help? <a href="mailto:plussiblehq@gmail.com" style="color:#007aff;font-weight:600;text-decoration:underline;">Chat with us</a></div>
+
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+</body>
+</html>
