@@ -35,42 +35,49 @@ document.addEventListener("DOMContentLoaded", function() {
   
     // Function to render offers
     function renderOffers(offers, page = 1) {
-        offerList.innerHTML = '';
-        const start = (page - 1) * itemsPerPage;
-        const end = page * itemsPerPage;
-        const paginatedOffers = offers.slice(start, end);
-        paginatedOffers.forEach(offer => {
-            const offerCard = document.createElement('div');
-            offerCard.classList.add('offer-card');
-            offerCard.innerHTML = `
-                <div class="left">
-                    <img src="${offer.image}" alt="${offer.name}">
+    offerList.innerHTML = '';
+    const start = (page - 1) * itemsPerPage;
+    const end = page * itemsPerPage;
+    const paginatedOffers = offers.slice(start, end);
+    paginatedOffers.forEach(offer => {
+        const offerCard = document.createElement('div');
+        offerCard.classList.add('offer-card');
+        offerCard.innerHTML = `
+            <div class="left">
+                <img src="${offer.image}" alt="${offer.name}">
+            </div>
+            <div class="middle">
+                <div class="offer-name">${offer.name}</div>
+                <div class="offer-chat">
+                    <button>Active</button>
                 </div>
-                <div class="middle">
-                    <div class="offer-name">${offer.name}</div>
-                    <div class="offer-chat">
-                        <button>Active</button>
-                    </div>
-                    <div class="offer-rating">
-                        <span class="star">&#9733;</span> <!-- Star icon -->
-                        <span>${offer.rating}</span>
-                    </div>
-                    <div class="offer-reviews">
-                        ${offer.reviews} reviews
-                    </div>
+                <div class="offer-rating">
+                    <span class="star">&#9733;</span>
+                    <span>${offer.rating}</span>
                 </div>
-                <div class="right">
-                    <div class="price">$${offer.price}</div>
-                    <div class="service">Swedish Massage</div>
-                    <div class="details">Duration: ${offer.duration}</div>
-                    <div class="details">Extras: ${offer.extras}</div>
-                    <div class="details">${offer.distance}</div>
-                    <a href="#" class="engage-btn">Engage Service</a>
+                <div class="offer-reviews">
+                    ${offer.reviews} reviews
                 </div>
-            `;
-            offerList.appendChild(offerCard);
+            </div>
+            <div class="right">
+                <div class="price">$${offer.price}</div>
+                <div class="service">Swedish Massage</div>
+                <div class="details">Duration: ${offer.duration}</div>
+                <div class="details">Extras: ${offer.extras}</div>
+                <div class="details">${offer.distance}</div>
+                <a href="#" class="engage-btn">Engage Service</a>
+            </div>
+        `;
+        offerList.appendChild(offerCard);
+
+        // ---- REDIRECT ENGAGE ----
+        offerCard.querySelector('.engage-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'sign-in.html';
         });
-    }
+    });
+}
+
   
     // Function to sort offers based on selected filter
     function sortOffers(criteria) {
