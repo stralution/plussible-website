@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plussible - Search Result</title>
+    <link rel="icon" href="/plussible/plussible%20logo/rounded_favicon%202.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible%20logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <link rel="stylesheet" href="styles/sign-in.css">
+    <link rel="stylesheet" href="styles/c-so-search-page.css">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-logo">
+            <img src="plussible%20logo/plussible%20logo.png" alt="Plussible Logo" style="height: 50px;">
+        </div>
+        <button class="menu-button">☰</button>
+        <div class="menu">
+            <a href="pending-orders.html">Orders</a>
+            <a href="#">Past Orders</a>
+            <a href="#">Chat Support</a>
+            <a href="#">Settings</a>
+            <a href="#" onclick="logOut()">Log Out</a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" placeholder="Find great offers from service providers near you ">
+            <button><a href="#">🔍</a></button>
+        </div>
+        <div class="sub-heading" id="results-heading">Special Offers Results for: </div>
+        <div class="zip-code" id="zip-code">ZIP Code: </div>
+        <div class="filter-box">
+            <label>Filter:</label>
+            <div class="filter-item">
+                <input type="checkbox" id="filter-lowest-price" value="lowest-price"> Lowest Price
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="filter-highest-price" value="highest-price"> Highest Price
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="filter-highest-rating" value="highest-rating"> Highest Rating
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="filter-most-reviews" value="most-reviews"> Most Reviews
+            </div>
+            <div class="filter-item">
+                <input type="checkbox" id="filter-closest-distance" value="closest-distance"> Closest Distance
+            </div>
+        </div>
+        <div class="offer-list-container">
+            <div id="offer-list" class="offer-list"></div>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <div id="calendarModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="calendarContainer" class="calendar-container"></div>
+        </div>
+    </div>
+
+    <div id="customTimeModal" class="modal">
+        <div id="customTimeContainer" class="modal-content">
+            <span class="close">&times;</span>
+        </div>
+    </div>
+
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+     <!-- Plussible Intelligence Magic Button (Floating) -->
+    <button class="pi-float-btn" id="pi-btn" aria-label="Open Plussible Intelligence">
+      <span class="pi-symbol">π</span>
+    </button>
+    <script>
+      // --- Magic for PI Button ---
+      const piBtn = document.getElementById('pi-btn');
+      piBtn.addEventListener('click', e => {
+        piBtn.blur();
+        alert("✨ Sign in to access Plussible Intelligence (π). π helps you quickly choose the best deal for you. ");
+      });
+    </script>
+    <script src="scripts/search/c-so-search-page.js"></script>
+</body>
+</html>

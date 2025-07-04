@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plussible - Business Sign In</title>
+    <!-- Multiple favicon sizes for better visibility -->
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon 2.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <link rel="stylesheet" href="styles/business-sign-in.css">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("password");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+            } else {
+                passwordInput.type = "password";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".header-logo").addEventListener("click", function() {
+                window.location.href = "plussible.html";
+            });
+
+            document.getElementById('sign-in-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                var email = document.getElementById('login-email').value;
+                var password = document.getElementById('password').value;
+
+                // Retrieve the stored users data from local storage
+                const users = JSON.parse(localStorage.getItem('businessUsers') || '[]');
+
+                // Find the user with the matching email and password
+                const user = users.find(user => user.email === email && user.password === password);
+
+                if (user) {
+                    // Store the current user data in local storage
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+
+                    alert('Login successful!');
+                    // Redirect to the business account page
+                    window.location.href = 'business-account.html';
+                } else {
+                    alert('Invalid email or password. Please try again.');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <a href="business-sign-up.html" class="header-button">Business Sign Up</a>
+    </header>
+    <div class="container">
+        <div class="sign-in-box">
+            <h2>Business Sign In</h2>
+            <form id="sign-in-form">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <label>
+                    <input type="checkbox" onclick="togglePasswordVisibility()"> Show Password
+                </label>
+                <label>
+                    <input type="checkbox"> Keep me signed in
+                </label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+                <button type="submit">Continue</button>
+            </form>
+        </div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+</body>
+</html>

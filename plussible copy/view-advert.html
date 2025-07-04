@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plussible - View Adverts</title>
+    <link rel="icon" href="/plussible/plussible%20logo/rounded_favicon%202.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/plussible/plussible%20logo/rounded_favicon_64.png" sizes="64x64" type="image/png">
+    <link rel="stylesheet" href="styles/sign-in.css">
+    <script src="scripts/user-location/location.js"></script>
+    <script src="scripts/footer/footer.js"></script>
+    <style>
+        /* Include all your CSS here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header.sticky-header {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  justify-content: space-between; 
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+}
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header-logo img {
+            height: 50px;
+            cursor: pointer;
+        }
+
+        nav {
+            position: relative;
+        }
+
+        nav .menu {
+            display: flex;
+            gap: 20px;
+            cursor: pointer;
+            color: #0092FF;
+        }
+
+        nav .menu-items {
+            margin-top: -15px;
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        nav .menu-items a {
+            display: block;
+            padding: 10px 20px;
+            color: #0092FF;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        nav .menu-items a:hover {
+            background-color: #f0f0f0;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #0092FF;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .back-button:hover {
+            color: #0056b3;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .sub-heading {
+            font-size: 24px;
+            margin-bottom: -12px;
+            color: #333;
+        }
+
+        .offer-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .offer-card-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .offer-card {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #ffffff;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            min-height: 200px;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .offer-card .left, .offer-card .right, .offer-card .middle {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .offer-card .left {
+            padding-right: 20px;
+        }
+
+        .offer-card .right {
+            padding-left: 20px;
+            text-align: right;
+        }
+
+        .offer-card .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .offer-card .service {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        .offer-card .details {
+            font-size: 16px;
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .offer-card .details:last-of-type {
+            margin-bottom: 20px;
+        }
+
+        .offer-card .engage-btn {
+            background-color: #0092FF;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+
+        .offer-card .engage-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .offer-card img {
+            width: 200px;
+            height: 150px;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .offer-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .offer-chat {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .offer-chat button {
+            padding: 8px 16px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .offer-chat button:hover {
+            background-color: #218838;
+        }
+
+        .offer-rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .offer-rating span {
+            margin-left: 5px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .offer-reviews {
+            font-size: 14px;
+            color: #999;
+            text-align: center;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            margin: 0 5px;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #0092FF;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .pagination a.active {
+            background-color: #0092FF;
+            color: white;
+        }
+
+        .pagination a:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        .pagination a.prev, .pagination a.next {
+            font-size: 20px;
+            padding: 10px 20px;
+        }
+
+        @media (max-width: 600px) {
+            .offer-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .offer-card .left, .offer-card .right, .offer-card .middle {
+                padding: 10px;
+                text-align: center;
+            }
+
+            .offer-card img {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 600px;
+            color: #333;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 18px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .button-group {
+            position: relative;
+            display: inline-block;
+        }
+
+        .button-group-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .button-group-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+
+        .button-group-content a:hover {
+            background-color: #ddd;
+        }
+
+        .button-group:hover .button-group-content {
+            display: block;
+        }
+
+        .modal-content label {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="number"],
+        .modal-content input[type="time"],
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .modal-content button#save-edit {
+            background-color: #0092FF;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .modal-content button#save-edit:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-logo">
+            <img src="plussible logo/plussible logo.png" alt="Plussible Logo">
+        </div>
+        <nav>
+            <div class="menu">Menu ▼</div>
+            <div class="menu-items">
+                <a href="#">Settings</a>
+                <a href="#">Chat Support</a>
+                <a href="#" id="logout-link">Log Out</a>
+            </div>
+        </nav>
+    </header>
+    <div class="header-bar">
+        <button class="back-button" onclick="window.location.href='business-account.html'">← Back</button>
+    </div>
+    <div class="container">
+        <div class="sub-heading">View Adverts</div>
+        <div id="error-message" class="error-message"></div>
+        <div id="offer-list" class="offer-list"></div>
+        <div class="pagination" id="pagination"></div>
+    </div>
+    <footer>
+        <!-- Footer content will be loaded here -->
+    </footer>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-preview-modal">&times;</span>
+            <h2>Advert Preview</h2>
+            <div id="preview-content"></div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-edit-modal">&times;</span>
+            <h2>Edit Advert</h2>
+            <div id="edit-content"></div>
+            <button id="save-edit">Save</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const offerList = document.getElementById('offer-list');
+            const pagination = document.getElementById('pagination');
+            const errorMessage = document.getElementById('error-message');
+
+            const storedUserData = localStorage.getItem('currentUser');
+            if (!storedUserData) {
+                window.location.href = 'business-sign-in.html';
+                return;
+            }
+            const currentUser = JSON.parse(storedUserData);
+            const userSpecificKey = `user_${currentUser.id}_serviceAdverts`;
+
+            const serviceAdverts = JSON.parse(localStorage.getItem(userSpecificKey) || '[]');
+            const workHoursData = JSON.parse(localStorage.getItem('workHoursData') || '[]');
+            const viewAdverts = JSON.parse(localStorage.getItem('viewAdverts') || '[]');
+
+            // Ensure viewAdverts is synced with serviceAdverts
+            serviceAdverts.forEach(offer => {
+                if (!viewAdverts.some(v => v.id === offer.id)) {
+                    viewAdverts.push(offer);
+                }
+            });
+
+            localStorage.setItem('viewAdverts', JSON.stringify(viewAdverts));
+
+            const itemsPerPage = 10;
+            let currentPage = 1;
+
+            // Default sorting function by price, then distance
+            function defaultSort(offers) {
+                return offers.sort((a, b) => a.price - b.price);
+            }
+
+            // Function to capitalize the first letter of each word
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
+            // Function to render offers
+            function renderOffers(offers, page = 1) {
+                offerList.innerHTML = '';
+                if (offers.length === 0) {
+                    errorMessage.textContent = 'There are currently no adverts to view.';
+                    return;
+                } else {
+                    errorMessage.textContent = '';
+                }
+                const start = (page - 1) * itemsPerPage;
+                const end = page * itemsPerPage;
+                const paginatedOffers = offers.slice(start, end);
+                paginatedOffers.forEach(offer => {
+                    const offerCardContainer = document.createElement('div');
+                    offerCardContainer.classList.add('offer-card-container');
+
+                    const offerCard = document.createElement('div');
+                    offerCard.classList.add('offer-card');
+
+                    // Fetch the business name from the business user storage
+                    const businessName = currentUser.businessName || 'Business Name';
+
+                    offerCard.innerHTML = `
+                        <div class="left">
+                            <img src="${offer.image}" alt="${capitalizeFirstLetter(offer.name)}">
+                        </div>
+                        <div class="middle">
+                            <div class="offer-name">${capitalizeFirstLetter(businessName)}</div>
+                            <div class="offer-chat">
+                                <button>Active</button>
+                            </div>
+                            <div class="offer-rating">
+                                <span class="star">&#9733;</span> <!-- Star icon -->
+                                <span>${offer.rating}</span>
+                            </div>
+                            <div class="offer-reviews">
+                                ${offer.reviews} reviews
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="price">$${offer.price}</div>
+                            <div class="service">${capitalizeFirstLetter(offer.name)}</div>
+                            <div class="details">Duration: ${formatDuration(offer.duration)}</div>
+                            <div class="details">Extras: ${offer.extras}</div>
+                            <div class="details">Special Offer: ${offer.specials}</div>
+                            <a href="#" class="engage-btn">Engage Service</a>
+                        </div>
+                        <div class="button-group">
+                            <button class="engage-btn">Edit</button>
+                            <div class="button-group-content">
+                                <a href="#" class="preview-btn" data-id="${offer.id}">Preview Advert Content</a>
+                                <a href="#" class="edit-btn" data-id="${offer.id}">Edit Advert Content</a>
+                                <a href="#" class="delete-btn" data-id="${offer.id}">Delete Advert</a>
+                            </div>
+                        </div>
+                    `;
+                    offerCardContainer.appendChild(offerCard);
+                    offerList.appendChild(offerCardContainer);
+                });
+
+                attachEventListeners();
+            }
+
+            function attachEventListeners() {
+                document.querySelectorAll('.preview-btn').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const id = this.getAttribute('data-id');
+                        previewAdvert(id);
+                    });
+                });
+
+                document.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const id = this.getAttribute('data-id');
+                        editAdvert(id);
+                    });
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const id = this.getAttribute('data-id');
+                        deleteAdvert(id);
+                    });
+                });
+            }
+
+            function formatDuration(duration) {
+                return duration.replace(/(\d+)\s+(hours?|minutes?)/g, (match, p1, p2) => {
+                    const singularOrPlural = parseInt(p1) === 1 ? p2.slice(0, -1) : p2;
+                    return `${p1} ${singularOrPlural}`;
+                });
+            }
+
+            function previewAdvert(id) {
+                const offer = viewAdverts.find(o => o.id === id);
+                const workHours = workHoursData.filter(wh => wh.name === offer.name);
+
+                const previewContent = document.getElementById('preview-content');
+                previewContent.innerHTML = `
+                    <table>
+                        <tr><th colspan="2">Advert Details</th></tr>
+                        <tr><td>ID:</td><td>${offer.id}</td></tr>
+                        <tr><td>Name:</td><td>${capitalizeFirstLetter(offer.name)}</td></tr>
+                        <tr><td>Price:</td><td>${offer.price}</td></tr>
+                        <tr><td>Duration:</td><td>${formatDuration(offer.duration)}</td></tr>
+                        <tr><td>Extras:</td><td>${offer.extras}</td></tr>
+                        <tr><td>Category:</td><td>${offer.category}</td></tr>
+                        <tr><td>Address:</td><td>${offer.address}</td></tr>
+                        <tr><td>Suite:</td><td>${offer.suite}</td></tr>
+                        <tr><td>City:</td><td>${offer.city}</td></tr>
+                        <tr><td>State:</td><td>${offer.state}</td></tr>
+                        <tr><td>Zip:</td><td>${offer.zip}</td></tr>
+                        <tr><td>Mobile:</td><td>${offer.mobile}</td></tr>
+                        <tr><td>Tags:</td><td>${offer.tags.join(', ')}</td></tr>
+                        <tr><td>Specials:</td><td>${offer.specials}</td></tr>
+                        <tr><td>Terms:</td><td>${offer.terms}</td></tr>
+                    </table>
+                    <h3>Work Hours</h3>
+                    <table>
+                        <tr><th>Day</th><th>Start Time</th><th>End Time</th><th>Performer</th><th>ID</th></tr>
+                        ${workHours.map(wh => `
+                            <tr>
+                                <td>${capitalizeFirstLetter(wh.day)}</td>
+                                <td>${wh.workHoursStart}</td>
+                                <td>${wh.workHoursEnd}</td>
+                                <td>${wh.performer}</td>
+                                <td>${wh.id}</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                `;
+                document.getElementById('preview-modal').style.display = 'block';
+            }
+
+            function editAdvert(id) {
+                const offer = viewAdverts.find(o => o.id === id);
+                const workHours = workHoursData.filter(wh => wh.name === offer.name);
+
+                const editContent = document.getElementById('edit-content');
+                editContent.innerHTML = `
+                    <h3>Advert Details</h3>
+                    <label>ID: <input type="text" id="edit-id" value="${offer.id}" readonly></label>
+                    <label>Name: <input type="text" id="edit-name" value="${capitalizeFirstLetter(offer.name)}"></label>
+                    <label>Price: <input type="number" id="edit-price" value="${offer.price}"></label>
+                    <label>Duration: <input type="text" id="edit-duration" value="${formatDuration(offer.duration)}"></label>
+                    <label>Extras: <input type="text" id="edit-extras" value="${offer.extras}"></label>
+                    <label>Category: <input type="text" id="edit-category" value="${offer.category}"></label>
+                    <label>Address: <input type="text" id="edit-address" value="${offer.address}"></label>
+                    <label>Suite: <input type="text" id="edit-suite" value="${offer.suite}"></label>
+                    <label>City: <input type="text" id="edit-city" value="${offer.city}"></label>
+                    <label>State: <input type="text" id="edit-state" value="${offer.state}"></label>
+                    <label>Zip: <input type="text" id="edit-zip" value="${offer.zip}"></label>
+                    <label>Mobile: <input type="text" id="edit-mobile" value="${offer.mobile}"></label>
+                    <label>Tags: <input type="text" id="edit-tags" value="${offer.tags.join(', ')}"></label>
+                    <label>Specials: <input type="text" id="edit-specials" value="${offer.specials}"></label>
+                    <label>Terms: <input type="text" id="edit-terms" value="${offer.terms}"></label>
+                `;
+
+                workHours.forEach((wh, index) => {
+                    editContent.innerHTML += `
+                        <h3>Work Hours ${index + 1}</h3>
+                        <label>Day: <input type="text" value="${capitalizeFirstLetter(wh.day)}" data-field="day"></label>
+                        <label>Start Time: <input type="time" value="${wh.workHoursStart}" data-field="start"></label>
+                        <label>End Time: <input type="time" value="${wh.workHoursEnd}" data-field="end"></label>
+                        <label>Performer: <input type="text" value="${wh.performer}" data-field="performer"></label>
+                        <label>ID: <input type="text" value="${wh.id}" data-field="whid" readonly></label>
+                    `;
+                });
+
+                document.getElementById('edit-modal').style.display = 'block';
+
+                document.getElementById('save-edit').onclick = function() {
+                    const updatedOffer = {
+                        id: document.getElementById('edit-id').value,
+                        name: document.getElementById('edit-name').value,
+                        price: document.getElementById('edit-price').value,
+                        duration: document.getElementById('edit-duration').value,
+                        extras: document.getElementById('edit-extras').value,
+                        category: document.getElementById('edit-category').value,
+                        address: document.getElementById('edit-address').value,
+                        suite: document.getElementById('edit-suite').value,
+                        city: document.getElementById('edit-city').value,
+                        state: document.getElementById('edit-state').value,
+                        zip: document.getElementById('edit-zip').value,
+                        mobile: document.getElementById('edit-mobile').value,
+                        tags: document.getElementById('edit-tags').value.split(',').map(tag => tag.trim()),
+                        specials: document.getElementById('edit-specials').value,
+                        terms: document.getElementById('edit-terms').value
+                    };
+
+                    const updatedWorkHours = Array.from(document.querySelectorAll('.work-hours')).map(div => ({
+                        day: div.querySelector('[data-field="day"]').value,
+                        workHoursStart: div.querySelector('[data-field="start"]').value,
+                        workHoursEnd: div.querySelector('[data-field="end"]').value,
+                        performer: div.querySelector('[data-field="performer"]').value,
+                        id: div.querySelector('[data-field="whid"]').value,
+                        name: updatedOffer.name
+                    }));
+
+                    const offerIndex = viewAdverts.findIndex(o => o.id === updatedOffer.id);
+                    viewAdverts[offerIndex] = updatedOffer;
+
+                    const serviceAdvertsIndex = serviceAdverts.findIndex(o => o.id === updatedOffer.id);
+                    if (serviceAdvertsIndex !== -1) {
+                        serviceAdverts[serviceAdvertsIndex] = updatedOffer;
+                    }
+
+                    const workHoursIndex = workHoursData.findIndex(wh => wh.name === updatedOffer.name);
+                    if (workHoursIndex !== -1) {
+                        workHoursData[workHoursIndex] = updatedWorkHours;
+                    }
+
+                    localStorage.setItem('viewAdverts', JSON.stringify(viewAdverts));
+                    localStorage.setItem('serviceAdverts', JSON.stringify(serviceAdverts));
+                    localStorage.setItem('workHoursData', JSON.stringify(workHoursData));
+
+                    alert('Advert updated successfully!');
+                    location.reload();
+                };
+            }
+
+            function deleteAdvert(id) {
+                const offerIndex = viewAdverts.findIndex(o => o.id === id);
+                const offerName = viewAdverts[offerIndex].name;
+                const workHoursIndex = workHoursData.findIndex(wh => wh.name === offerName);
+                const serviceAdvertsIndex = serviceAdverts.findIndex(o => o.id === id);
+
+                if (offerIndex !== -1) viewAdverts.splice(offerIndex, 1);
+                if (workHoursIndex !== -1) workHoursData.splice(workHoursIndex, 1);
+                if (serviceAdvertsIndex !== -1) serviceAdverts.splice(serviceAdvertsIndex, 1);
+
+                localStorage.setItem('viewAdverts', JSON.stringify(viewAdverts));
+                localStorage.setItem('workHoursData', JSON.stringify(workHoursData));
+                localStorage.setItem('serviceAdverts', JSON.stringify(serviceAdverts));
+
+                alert('Advert deleted successfully!');
+                renderOffers(defaultSort(viewAdverts), currentPage);
+                renderPagination(viewAdverts.length, itemsPerPage, currentPage);
+            }
+
+            // Function to render pagination
+            function renderPagination(totalItems, itemsPerPage, currentPage) {
+                const totalPages = Math.ceil(totalItems / itemsPerPage);
+                pagination.innerHTML = '';
+
+                if (currentPage > 1) {
+                    const prevLink = document.createElement('a');
+                    prevLink.textContent = '«';
+                    prevLink.href = '#';
+                    prevLink.classList.add('prev');
+                    prevLink.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        currentPage--;
+                        renderOffers(defaultSort(viewAdverts), currentPage);
+                        renderPagination(totalItems, itemsPerPage, currentPage);
+                    });
+                    pagination.appendChild(prevLink);
+                }
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageLink = document.createElement('a');
+                    pageLink.textContent = i;
+                    pageLink.href = '#';
+                    pageLink.classList.toggle('active', i === currentPage);
+                    pageLink.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        currentPage = i;
+                        renderOffers(defaultSort(viewAdverts), currentPage);
+                        renderPagination(totalItems, itemsPerPage, currentPage);
+                    });
+                    pagination.appendChild(pageLink);
+                }
+
+                if (currentPage < totalPages) {
+                    const nextLink = document.createElement('a');
+                    nextLink.textContent = '»';
+                    nextLink.href = '#';
+                    nextLink.classList.add('next');
+                    nextLink.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        currentPage++;
+                        renderOffers(defaultSort(viewAdverts), currentPage);
+                        renderPagination(totalItems, itemsPerPage, currentPage);
+                    });
+                    pagination.appendChild(nextLink);
+                }
+            }
+
+            // Initial render with default sort and pagination
+            renderOffers(defaultSort(viewAdverts), currentPage);
+            renderPagination(viewAdverts.length, itemsPerPage, currentPage);
+
+            // Event listener for modal close buttons
+            document.querySelectorAll('.modal .close').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+
+            const menu = document.querySelector('.menu');
+            const menuItems = document.querySelector('.menu-items');
+            const logoutLink = document.getElementById('logout-link');
+
+            menu.addEventListener('click', function(event) {
+                menuItems.style.display = menuItems.style.display === 'none' ? 'block' : 'none';
+                event.stopPropagation();
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!menu.contains(event.target)) {
+                    menuItems.style.display = 'none';
+                }
+            });
+
+            // Log out functionality
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                localStorage.removeItem('currentUser');
+                window.location.href = 'business-sign-in.html';
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".header-logo").addEventListener("click", function() {
+                window.location.href = "plussible.html";
+            });
+        });
+    </script>
+</body>
+</html>
