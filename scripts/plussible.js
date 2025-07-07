@@ -198,6 +198,20 @@ document.addEventListener("DOMContentLoaded", () => {
     piBox.style.display = 'none';
   }
 
+  // ---------- SPECIAL REDIRECT FOR MASSAGE SEARCHES -------------
+  quickSearchButton.addEventListener('click', (e) => {
+    const query = searchInput.value.toLowerCase().trim();
+    if (
+      query.includes('massage') ||
+      query.includes('spa') ||
+      query.includes('swedish massage')
+    ) {
+      e.preventDefault();
+      window.location.href = 'search.html';
+      return;
+    }
+  }, true); // runs before any other click handlers
+
   // Quick Search button
   quickSearchButton.addEventListener('click', () => {
     const query = searchInput.value.toLowerCase().trim();
