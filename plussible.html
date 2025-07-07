@@ -11,7 +11,7 @@
   <script src="scripts/footer/footer.js"></script>
   <script src="scripts/plussible.js" defer></script>
   <style>
-    /* Animated placeholder overlay inside input */
+    /* (Unchanged CSS from your original) */
     .animated-placeholder {
       position: absolute;
       top: 50%;
@@ -194,6 +194,8 @@
   </footer>
   <!-- EINSTEIN'S FULL MATCHING + CONSOLE DEBUG -->
   <script>
+    // (Your existing script below remains UNCHANGED, but REMOVE the duplicate quick-search "massage" redirect handler! Only the handler in plussible.js will remain active.)
+
     function levenshtein(a, b) {
       if (!a) return b.length;
       if (!b) return a.length;
@@ -239,24 +241,7 @@
       }
     });
 
-    // -- Added: Special redirect for "massage" queries --
-    document.addEventListener('DOMContentLoaded', function () {
-      const searchInput = document.getElementById('search-input');
-      const quickSearchBtn = document.getElementById('quick-search-btn');
-
-      quickSearchBtn.addEventListener('click', function (e) {
-        const value = (searchInput.value || '').toLowerCase();
-        if (
-          value.includes('massage') ||
-          value.includes('spa') ||
-          value.includes('swedish massage')
-        ) {
-          e.preventDefault();
-          window.location.href = "search.html";
-          return false;
-        }
-      });
-    });
+    // (NO duplicate "massage" quick-search handler here!)
 
     document.addEventListener("DOMContentLoaded", function () {
       const findExpertBtn = document.getElementById('find-expert-btn');
