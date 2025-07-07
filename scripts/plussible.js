@@ -207,6 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
       query.includes('swedish massage')
     ) {
       e.preventDefault();
+      e.stopImmediatePropagation(); // This is the *only* change.
       window.location.href = 'search.html';
       return;
     }
