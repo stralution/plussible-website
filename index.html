@@ -251,6 +251,7 @@
           value.includes('spa') ||
           value.includes('swedish massage')
         ) {
+          e.preventDefault();
           window.location.href = "search.html";
           return false;
         }
