@@ -44,6 +44,11 @@ document.addEventListener("DOMContentLoaded", function() {
   errorMessage.classList.add('error-message');
   container.appendChild(errorMessage);
 
+  // --- UNIQUE KEY HELPER ---
+  function makeAdvertKey(name, businessName) {
+      return `${name}__${businessName}`;
+  }
+
   function searchAdverts(query) {
       const allAdvertsKeys = Object.keys(localStorage).filter(key => key.startsWith('user_') && key.endsWith('_serviceAdverts'));
       let allAdverts = [];
@@ -83,10 +88,11 @@ document.addEventListener("DOMContentLoaded", function() {
       return offers.sort((a, b) => a.price - b.price);
   }
 
+  // --- FIX: Engagement is now per (name, businessName) ---
   function calculateEngagementCounts(selectedTimeSlots) {
       const engagementCounts = {};
       selectedTimeSlots.forEach(slot => {
-          const advertKey = slot.offerName;
+          const advertKey = makeAdvertKey(slot.offerName, slot.businessName);
           if (engagementCounts[advertKey]) {
               engagementCounts[advertKey]++;
           } else {
@@ -98,7 +104,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function updateOffersWithEngagementCounts(offers, engagementCounts) {
       offers.forEach(offer => {
-          offer.engagementCount = engagementCounts[offer.name] || 0;
+          const advertKey = makeAdvertKey(offer.name, offer.businessName);
+          offer.engagementCount = engagementCounts[advertKey] || 0;
       });
   }
 
@@ -144,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
                   <div class="details">Duration: ${formatDuration(offer.duration)}</div>
                   <div class="details">Extras: ${offer.extras}</div>
                   <div class="details">${offer.distance}</div>
-                  <a href="#" class="engage-btn" onclick="showCalendar('${offer.name}', '${offer.priceType}', '${offer.duration}')">Engage Service</a>
+                  <a href="#" class="engage-btn" onclick="showCalendar('${offer.name}', '${offer.priceType}', '${offer.duration}', '${offer.businessName}')">Engage Service</a>
               </div>
           `;
           offerList.appendChild(offerCard);
@@ -298,15 +305,16 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
-function showCalendar(offerName, priceType, duration) {
-  console.log(`showCalendar called for offer: ${offerName}`);
+// --- Add businessName to calendar and engagement logic ---
+function showCalendar(offerName, priceType, duration, businessName) {
+  console.log(`showCalendar called for offer: ${offerName} / ${businessName}`);
   const allAdvertsKeys = Object.keys(localStorage).filter(key => key.startsWith('user_') && key.endsWith('_serviceAdverts'));
   let allAdverts = [];
   allAdvertsKeys.forEach(key => {
       const adverts = JSON.parse(localStorage.getItem(key)) || [];
       allAdverts = allAdverts.concat(adverts);
   });
-  const offer = allAdverts.find(offer => offer.name === offerName);
+  const offer = allAdverts.find(offer => offer.name === offerName && offer.businessName === businessName);
 
   if (!offer) {
       console.error(`Offer not found: ${offerName}`);
@@ -320,7 +328,7 @@ function showCalendar(offerName, priceType, duration) {
       const modal = document.getElementById("calendarModal");
       const calendarContainer = document.getElementById("calendarContainer");
       modal.style.display = "block";
-      generateCalendar(offerName, calendarContainer, duration);
+      generateCalendar(offerName, calendarContainer, duration, undefined, undefined, businessName);
   }
 }
 
@@ -345,7 +353,7 @@ function displayServiceProviderList(offer, duration) {
       performerButton.onclick = () => {
           console.log(`Performer selected: ${performer}`);
           document.getElementById("calendarModal").style.display = "block";
-          generateCalendarForPerformer(performer, duration, offer.name);
+          generateCalendarForPerformer(performer, duration, offer.name, offer.businessName);
       };
       serviceProviderListContainer.appendChild(performerButton);
   });
@@ -362,7 +370,7 @@ function displayServiceProviderList(offer, duration) {
 
 let currentYear, currentMonth;
 
-function generateCalendarForPerformer(performerName, duration, offerName) {
+function generateCalendarForPerformer(performerName, duration, offerName, businessName) {
   console.log(`generateCalendarForPerformer called for performer: ${performerName}`);
   const modal = document.getElementById("calendarModal");
   const calendarContainer = document.getElementById("calendarContainer");
@@ -375,10 +383,10 @@ function generateCalendarForPerformer(performerName, duration, offerName) {
       currentMonth = date.getMonth();
   }
 
-  generateCalendar(performerName, calendarContainer, duration, currentYear, currentMonth, offerName);
+  generateCalendar(performerName, calendarContainer, duration, currentYear, currentMonth, offerName, businessName);
 }
 
-function generateCalendar(performerName, container, duration, year, month, offerName) {
+function generateCalendar(performerName, container, duration, year, month, offerName, businessName) {
   console.log(`generateCalendar called for performer: ${performerName}`);
   const workHoursData = JSON.parse(localStorage.getItem('workHoursData') || '[]');
   const workHours = workHoursData.filter(wh => wh.performer === performerName);
@@ -398,9 +406,9 @@ function generateCalendar(performerName, container, duration, year, month, offer
 
   container.innerHTML = `
       <h2>
-          ${month > new Date().getMonth() || year > new Date().getFullYear() ? `<button onclick="changeMonth(-1, '${performerName}', '${duration}', '${offerName}')">«</button>` : ''}
+          ${month > new Date().getMonth() || year > new Date().getFullYear() ? `<button onclick="changeMonth(-1, '${performerName}', '${duration}', '${offerName}', '${businessName}')">«</button>` : ''}
           ${monthName} ${year}
-          <button onclick="changeMonth(1, '${performerName}', '${duration}', '${offerName}')">»</button>
+          <button onclick="changeMonth(1, '${performerName}', '${duration}', '${offerName}', '${businessName}')">»</button>
       </h2>
       <table class="calendar">
           <thead>
@@ -415,14 +423,14 @@ function generateCalendar(performerName, container, duration, year, month, offer
               </tr>
           </thead>
           <tbody>
-              ${generateCalendarRows(new Date(year, month, 1).getDay(), new Date(year, month + 1, 0).getDate(), workHours, duration, performerName, startTime, endTime, serviceDuration, offerName)}
+              ${generateCalendarRows(new Date(year, month, 1).getDay(), new Date(year, month + 1, 0).getDate(), workHours, duration, performerName, startTime, endTime, serviceDuration, offerName, businessName)}
           </tbody>
       </table>
   `;
   console.log('Calendar generated and displayed');
 }
 
-function changeMonth(offset, performerName, duration, offerName) {
+function changeMonth(offset, performerName, duration, offerName, businessName) {
   const now = new Date();
   const current = new Date(currentYear, currentMonth);
   const nextMonth = new Date(current.setMonth(currentMonth + offset));
@@ -430,11 +438,11 @@ function changeMonth(offset, performerName, duration, offerName) {
   if (nextMonth >= now || nextMonth.getFullYear() > now.getFullYear() || nextMonth.getMonth() >= now.getMonth()) {
       currentMonth = nextMonth.getMonth();
       currentYear = nextMonth.getFullYear();
-      generateCalendar(performerName, document.getElementById('calendarContainer'), duration, currentYear, currentMonth, offerName);
+      generateCalendar(performerName, document.getElementById('calendarContainer'), duration, currentYear, currentMonth, offerName, businessName);
   }
 }
 
-function generateCalendarRows(firstDayOfWeek, daysInMonth, workHours, duration, performerName, startTime, endTime, serviceDuration, offerName) {
+function generateCalendarRows(firstDayOfWeek, daysInMonth, workHours, duration, performerName, startTime, endTime, serviceDuration, offerName, businessName) {
   let rows = '';
   let day = 1;
   const selectedTimeSlots = JSON.parse(localStorage.getItem('selectedTimeSlots') || '[]');
@@ -456,12 +464,12 @@ function generateCalendarRows(firstDayOfWeek, daysInMonth, workHours, duration, 
 
               if (isWorkDay) {
                   const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
-                  const timeSlotsForDay = selectedTimeSlots.filter(slot => slot.date === dateStr && slot.performerName === performerName);
+                  const timeSlotsForDay = selectedTimeSlots.filter(slot => slot.date === dateStr && slot.performerName === performerName && slot.offerName === offerName && slot.businessName === businessName);
 
                   const availableSlots = getAvailableSlotsForDay(startTime, endTime, serviceDuration, timeSlotsForDay, currentDate);
 
                   if (availableSlots.length > 0 && !isPastDate) {
-                      rows += `<td class="selectable" onclick="selectDate(${day}, '${encodeURIComponent(JSON.stringify(workHours))}', '${duration}', '${performerName}', '${offerName}', event)">${day}</td>`;
+                      rows += `<td class="selectable" onclick="selectDate(${day}, '${encodeURIComponent(JSON.stringify(workHours))}', '${duration}', '${performerName}', '${offerName}', '${businessName}', event)">${day}</td>`;
                   } else if (isPastDate) {
                       rows += `<td class="past-date" title="This date has passed">${day}</td>`;
                   } else {
@@ -501,7 +509,7 @@ function getAvailableSlotsForDay(startTime, endTime, serviceDuration, timeSlotsF
   return availableSlots;
 }
 
-function selectDate(day, workHours, duration, performerName, offerName, event) {
+function selectDate(day, workHours, duration, performerName, offerName, businessName, event) {
   console.log(`selectDate called for day: ${day}`);
   const parsedWorkHours = JSON.parse(decodeURIComponent(workHours));
   const timeSlotContainer = document.createElement('div');
@@ -524,7 +532,7 @@ function selectDate(day, workHours, duration, performerName, offerName, event) {
   existingTimeSlotContainers.forEach(container => container.remove());
 
   const selectedTimeSlots = JSON.parse(localStorage.getItem('selectedTimeSlots') || '[]');
-  const selectedTimeSlotsForDay = selectedTimeSlots.filter(slot => slot.date === `${currentYear}-${currentMonth + 1}-${day}` && slot.performerName === performerName);
+  const selectedTimeSlotsForDay = selectedTimeSlots.filter(slot => slot.date === `${currentYear}-${currentMonth + 1}-${day}` && slot.performerName === performerName && slot.offerName === offerName && slot.businessName === businessName);
 
   const availableSlots = getAvailableSlotsForDay(startTime, endTime, serviceDuration, selectedTimeSlotsForDay, selectedDay);
 
@@ -532,7 +540,7 @@ function selectDate(day, workHours, duration, performerName, offerName, event) {
       const button = document.createElement('button');
       button.textContent = `${slot.start} - ${slot.end}`;
       button.onclick = () => {
-          selectTimeSlot(slot.start, slot.end, performerName, day, selectedDay, offerName);
+          selectTimeSlot(slot.start, slot.end, performerName, day, selectedDay, offerName, businessName);
       };
       timeSlotContainer.appendChild(button);
   });
@@ -569,24 +577,25 @@ function parseDuration(durationStr) {
   return 0;
 }
 
-function selectTimeSlot(start, end, performerName, day, selectedDay, offerName) {
+function selectTimeSlot(start, end, performerName, day, selectedDay, offerName, businessName) {
   const formattedDate = selectedDay.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
   alert(`You have selected the time slot from ${start} to ${end} on ${formattedDate}`);
 
   const selectedTimeSlots = JSON.parse(localStorage.getItem('selectedTimeSlots') || '[]');
-  selectedTimeSlots.push({ performerName, date: `${currentYear}-${currentMonth + 1}-${day}`, start, end, offerName });
+  selectedTimeSlots.push({ performerName, date: `${currentYear}-${currentMonth + 1}-${day}`, start, end, offerName, businessName });
   localStorage.setItem('selectedTimeSlots', JSON.stringify(selectedTimeSlots));
 
-  updateServiceEngagementCount(offerName);
-  addPendingOrder(offerName); // Function to add offer to pending orders
+  updateServiceEngagementCount(offerName, businessName);
+  addPendingOrder(offerName, businessName); // Function to add offer to pending orders
   location.reload();
 }
 
-function updateServiceEngagementCount(offerName) {
+// --- fix: engagement only for correct (offerName, businessName) ---
+function updateServiceEngagementCount(offerName, businessName) {
   const allAdvertsKeys = Object.keys(localStorage).filter(key => key.startsWith('user_') && key.endsWith('_serviceAdverts'));
   allAdvertsKeys.forEach(key => {
       let adverts = JSON.parse(localStorage.getItem(key)) || [];
-      const offerIndex = adverts.findIndex(offer => offer.name === offerName);
+      const offerIndex = adverts.findIndex(offer => offer.name === offerName && offer.businessName === businessName);
       if (offerIndex !== -1) {
           adverts[offerIndex].engagementCount = (adverts[offerIndex].engagementCount || 0) + 1;
           localStorage.setItem(key, JSON.stringify(adverts));
@@ -594,9 +603,9 @@ function updateServiceEngagementCount(offerName) {
   });
 }
 
-function addPendingOrder(offerName) {
+function addPendingOrder(offerName, businessName) {
   const searchResults = JSON.parse(localStorage.getItem('searchResults') || '[]');
-  const offer = searchResults.find(offer => offer.name === offerName);
+  const offer = searchResults.find(offer => offer.name === offerName && offer.businessName === businessName);
   if (offer) {
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       const userPendingOrdersKey = `pendingOrders_${currentUser.username}`;
