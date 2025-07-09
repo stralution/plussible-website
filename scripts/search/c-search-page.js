@@ -338,7 +338,14 @@ function displayServiceProviderList(offer, duration) {
   serviceProviderListContainer.classList.add('service-provider-list-container');
 
   const workHoursData = JSON.parse(localStorage.getItem('workHoursData') || '[]');
-  const performers = [...new Set(workHoursData.filter(wh => wh.name === offer.name).map(wh => wh.performer))];
+  // --- FIX: Only show performers for this business's service ---
+  const performers = [
+    ...new Set(
+      workHoursData
+        .filter(wh => wh.name === offer.name && wh.businessName === offer.businessName)
+        .map(wh => wh.performer)
+    )
+  ];
 
   console.log('Performers:', performers);
 
