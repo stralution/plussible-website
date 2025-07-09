@@ -160,6 +160,12 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       const currentUser = JSON.parse(storedUserData);
 
+      // --- GET businessName from adverts ---
+      const userSpecificKey = `user_${currentUser.id}_serviceAdverts`;
+      const serviceAdverts = JSON.parse(localStorage.getItem(userSpecificKey)) || [];
+      const service = serviceAdverts.find(s => s.name === serviceName);
+      const businessName = service ? service.businessName : '';
+
       let workHoursData = JSON.parse(localStorage.getItem('workHoursData')) || [];
 
       // Check if the exact same entry already exists
@@ -169,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
           workHour.workHoursEnd === workHoursEnd &&
           workHour.performer === performer &&
           workHour.creatorId === currentUser.id &&
+          workHour.businessName === businessName && // <-- ADD businessName here
           workDays.includes(workHour.day)
       );
 
@@ -185,7 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
               workHoursStart,
               workHoursEnd,
               performer,
-              creatorId: currentUser.id
+              creatorId: currentUser.id,
+              businessName // --- ADD businessName to every entry ---
           };
           workHoursData.push(workHours);
       });
@@ -231,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   <tr>
                       <th>Day</th>
                       <th>Service Name</th>
+                      <th>Business</th>
                       <th>Work Hours</th>
                       <th>Performer</th>
                       <th>ID</th>
@@ -243,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (validWorkHoursData.length === 0) {
           tableContent += `
               <tr>
-                  <td colspan="6">No work hours saved.</td>
+                  <td colspan="7">No work hours saved.</td>
               </tr>
           `;
       } else {
@@ -255,6 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       <tr>
                           ${index === 0 ? `<td rowspan="${dayGroup.length}">${workHour.day.charAt(0).toUpperCase() + workHour.day.slice(1)}</td>` : ''}
                           <td>${workHour.name}</td>
+                          <td>${workHour.businessName || ''}</td>
                           <td>${workHour.workHoursStart} to ${workHour.workHoursEnd}</td>
                           <td>${workHour.performer}</td>
                           <td>${workHour.id}</td>
